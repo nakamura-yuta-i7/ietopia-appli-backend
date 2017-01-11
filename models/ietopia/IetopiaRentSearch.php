@@ -1,4 +1,7 @@
 <?php
+require_once APP_ROOT . "/libs/HttpClient.php";
+require_once APP_ROOT . "/libs/WhiteSpace.php";
+
 class IetopiaRentSearchPageToshimaKu {
 	public $pageLimit = 200;
 
@@ -9,7 +12,8 @@ class IetopiaRentSearchPageToshimaKu {
 	}
 	# 検索結果を読み込み
 	function loadUrl($url) {
-		phpQuery::newDocumentFileHTML( $url );
+		$html = HttpClient::request( $url );
+		phpQuery::newDocument( $html );
 	}
 	# 建物総数を取得
 	function totalBuilding() {
@@ -62,7 +66,9 @@ class IetopiaSearchResultBuilding {
 	# 建物写真URLリストを返す
 	function getGaikanImageUrls() {
 		$url = $this->getDetailUrl();
-		phpQuery::newDocumentFileHTML( $url );
+		$html = HttpClient::request( $url );
+		phpQuery::newDocument( $html );
+		
 		$list = [];
 		foreach ( pq("#thumb_list ul li a img") as $thumImage ) {
 			$src = pq($thumImage)->attr("src");
@@ -106,6 +112,12 @@ class IetopiaSearchResultRoom {
 	# フィールド一覧
 	# see: https://docs.google.com/spreadsheets/d/1ECoCeNmhP_qIyaiJR-XMILhSNAywsXhqgY83eylqFYU/edit#gid=0
 	const ID                       = "id";
+	
+	const YATIN_INT                = "yatin_int";
+	const MENSEKI_INT              = "menseki_int";
+	const NEW_ARRIVAL_FLAG         = "new_arrival_flag";
+	const CREATED_AT               = "created_at";
+	
 	const NAME                     = "name";
 	const NAME_FULL                = "name_full";
 	const CATCHCOPY                = "catchcopy";
@@ -156,10 +168,9 @@ class IetopiaSearchResultRoom {
 	function detailUrl() {
 		return $this->baseUrl;
 	}
-	function load() {
-		if ( ! $this->didLoaded ) {
-			$this->reload();
-		}
+	function getContent() {
+		$this->_parseLoadContent();
+		return $this->content;
 	}
 	function getNaikanImageUrls() {
 		$this->load();
@@ -181,10 +192,17 @@ class IetopiaSearchResultRoom {
 		return $list;
 	}
 	function reload() {
-		phpQuery::newDocumentFileHTML( $this->baseUrl );
+		$html = HttpClient::request( $this->baseUrl );
+		phpQuery::newDocument( $html );
+		$this->didLoaded = true;
 	}
-	public $content = [];
-	function parseLoadContent() {
+	protected function load() {
+		if ( ! $this->didLoaded ) {
+			$this->reload();
+		}
+	}
+	protected $content = [];
+	protected function _parseLoadContent() {
 		$this->load();
 		$html = pq("#contents #article");
 		$basic = pq("#item_info .item_table");
@@ -223,7 +241,8 @@ class IetopiaSearchResultRoom {
 		$this->content[static::COMMENT] = $html->find("#admin_comment p")->text();
 		
 		# 詳細情報
-		$this->content[static::KAKAKU] = trim( $detail->find("tr:eq(0) th:eq(0)")->next("td")->text() );
+		$kakaku = $detail->find("tr:eq(0) th:eq(0)")->next("td")->text();
+		$this->content[static::KAKAKU] = trim( $kakaku );
 		$this->content[static::SIKIKIN_HOSHOUKIN] = $detailVal("敷金/保証金");
 		$this->content[static::REIKIN_SHOKYAKU_SIKIHIKI] = $detailVal("礼金/償却・敷引");
 		$this->content[static::KOUSHINRYO] = $detailVal("更新料");
@@ -241,8 +260,19 @@ class IetopiaSearchResultRoom {
 		$this->content[static::SHUHENSHISETU] = $detailVal("周辺");
 		$this->content[static::TORIHIKITAIYO] = $detailVal("取引");
 		
+		# 拡張項目
+		$this->content[static::YATIN_INT] = $this->kakakuToInteger($kakaku);
+		$this->content[static::MENSEKI_INT] = $this->mensekiToInterger($basicVal("専有面積"));
+		
 		#foreach ( $this->content as $key => $val ) {
 		#	$this->content[$key] = static::trim($val);
 		#}
+	}
+	
+	protected function kakakuToInteger($kakaku) {
+		return str_replace("万円", "", $kakaku) * 10000;
+	}
+	protected function mensekiToInterger($menseki) {
+		return str_replace("m²", "", $menseki);
 	}
 }

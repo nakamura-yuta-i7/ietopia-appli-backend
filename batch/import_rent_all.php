@@ -1,17 +1,17 @@
 <?php
 require_once __DIR__ . "/../config/bootstrap.php";
 
-$roomModel = new Room();
-$room = new IetopiaSearchResultRoom("http://www.ietopia.jp/rent/308/13249");
-$result = $room->getNaikanImageUrls();
-var_export($result);
+// $roomModel = new Room();
+// $room = new IetopiaSearchResultRoom("http://www.ietopia.jp/rent/425/13006");
+// var_export($room->getContent());
 
-return;
+// $roomModel->upsert($room->getContent(), $pk=Room::ID);
 
-$room->parseLoadContent();
-$roomModel->upsert($room->content, $pk=Room::ID);
-var_export($room->content);
-return ;
+// return;
+
+
+
+
 
 # 家とぴあの情報をアプリ用データベースに取込
 $roomModel = new Room();
@@ -26,7 +26,10 @@ foreach ( $rentSearchPageToshimaKu->getBuildingList() as $item ) {
 	$detailUrl = $item->getDetailUrl();
 	
 	# 外観写真
-	# $gaikanImageUrls = $item->getGaikanImageUrls();
+	$gaikanImageUrls = $item->getGaikanImageUrls();
+	
+var_export($gaikanImageUrls);
+exit;
 	
 	# 部屋
 	$roomUrls = $item->getRoomUrls();
@@ -35,13 +38,7 @@ foreach ( $rentSearchPageToshimaKu->getBuildingList() as $item ) {
 	foreach ($rooms as $room) {
 		$room->parseLoadContent();
 		
-		$roomModel->upsert($room->content, $pk=Room::ID );
-		
-		var_export($room->content);
+		$roomModel->upsert($room->getContent(), $pk=Room::ID );
 exit;
 	}
-	
-	var_export(compact("name","id","detailUrl","roomUrls","gaikanImageUrls","rooms"));
-	
-	echo PHP_EOL;
 }
