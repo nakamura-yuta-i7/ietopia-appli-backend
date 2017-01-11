@@ -1,4 +1,6 @@
 <?php
+require_once APP_ROOT . "/libs/Json.php";
+
 class HttpClient {
 	static function request($url) {
 		return static::requestSimple($url);
@@ -23,10 +25,10 @@ class HttpClient {
 		} else if ( $status_code >= 500 && $status_code >= 599 ) {
 			
 		}
-		throw new ErrorException(json_encode([
+		throw new ErrorException( Json::encode([
 			"message"     => "HTTP Request Error.",
 			"status_code" => $status_code,
 			"response"    => $response
-		], JSON_UNESCAPED_UNICODE));
+		]) );
 	}
 }

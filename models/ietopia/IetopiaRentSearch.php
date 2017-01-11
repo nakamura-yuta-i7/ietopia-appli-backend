@@ -1,13 +1,15 @@
 <?php
 require_once APP_ROOT . "/libs/HttpClient.php";
 require_once APP_ROOT . "/libs/WhiteSpace.php";
+require_once APP_ROOT . "/libs/Json.php";
 
 class IetopiaRentSearchPageToshimaKu {
-	public $pageLimit = 200;
+	public $pageLimit = 10;
 
 	function __construct() {
 		$baseUrl = IETOPIA_URL . "/rent_search/area/" . urlencode("東京都-豊島区");
 		$this->baseUrl = $baseUrl;
+		
 		$this->loadUrl( $this->baseUrl . "/limit:" . $this->pageLimit );
 	}
 	# 検索結果を読み込み
@@ -118,6 +120,9 @@ class IetopiaSearchResultRoom {
 	const NEW_ARRIVAL_FLAG         = "new_arrival_flag";
 	const CREATED_AT               = "created_at";
 	
+	const NAIKAN_IMAGES            = "naikan_images";
+	const GAIKAN_IMAGES_ID         = "gaikan_images_id";
+	
 	const NAME                     = "name";
 	const NAME_FULL                = "name_full";
 	const CATCHCOPY                = "catchcopy";
@@ -164,6 +169,13 @@ class IetopiaSearchResultRoom {
 	}
 	function ID() {
 		return preg_replace("/.+\//", "", $this->baseUrl);
+	}
+	function BUILDING_ID() {
+		$url = $this->baseUrl;
+		if ( preg_match("/.+\/([1-9].+)\//", $url, $matches) ) {
+			return $matches[1];
+		}
+		throw new ErrorException("建物IDが見つけられませんでした  url: {$url}");
 	}
 	function detailUrl() {
 		return $this->baseUrl;
@@ -215,6 +227,14 @@ class IetopiaSearchResultRoom {
 		};
 		# MEMO: phpQueryの:containsセレクターにはバグがあり、tr:eq() th:eq() で暫定取得している
 		#       原因不明な為、一旦はこのような方法で回避していることに注意！
+		
+		# 建物(外観写真一覧)ID
+		$this->content[static::GAIKAN_IMAGES_ID] = 
+			$this->BUILDING_ID();
+		
+		# 内観写真一覧
+		$this->content[static::NAIKAN_IMAGES] = 
+			Json::encode( $this->getNaikanImageUrls() );
 		
 		# 基本情報
 		$this->content[static::ID] = $this->ID();
