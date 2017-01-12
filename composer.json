@@ -1,6 +1,7 @@
 {
     "name": "yuta/ietopia",
     "require": {
-        "electrolinux/phpquery": "^0.9.6"
+        "electrolinux/phpquery": "^0.9.6",
+        "phpmailer/phpmailer": "^5.2"
     }
 }

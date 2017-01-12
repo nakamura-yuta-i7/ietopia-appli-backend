@@ -17,18 +17,26 @@ class HttpClient {
 		if ( $status_code == 200 ) {
 			# 正常系
 			return $response;
-			
 		} else if ( $status_code >= 300 && $status_code >= 399 ) {
 			
+		} else if ( $status_code == 404 ) {
+			throw new HttpStatus404Error( Json::encode([
+				"message"     => "404 NotFound Error.",
+				"status_code" => $status_code,
+				"response"    => $response
+			]) );
 		} else if ( $status_code >= 400 && $status_code >= 499 ) {
 			
 		} else if ( $status_code >= 500 && $status_code >= 599 ) {
 			
 		}
-		throw new ErrorException( Json::encode([
+		throw new HttpStatusError( Json::encode([
 			"message"     => "HTTP Request Error.",
 			"status_code" => $status_code,
 			"response"    => $response
 		]) );
 	}
 }
+
+class HttpStatusError extends ErrorException {}
+class HttpStatus404Error extends ErrorException {}
