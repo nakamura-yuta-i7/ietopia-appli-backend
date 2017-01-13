@@ -9,6 +9,9 @@ class HttpClient {
 		$context = stream_context_create(array(
 			'http' => array('ignore_errors' => true)
 		));
+		
+		Log::info([__METHOD__, '$url: '.$url ]);
+		
 		$response = file_get_contents($url, false, $context);
 		
 		preg_match('/HTTP\/1\.[0|1|x] ([0-9]{3})/', $http_response_header[0], $matches);

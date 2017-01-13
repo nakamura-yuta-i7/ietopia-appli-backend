@@ -4,13 +4,12 @@ require_once APP_ROOT . "/libs/WhiteSpace.php";
 require_once APP_ROOT . "/libs/Json.php";
 
 class IetopiaRentSearchPageToshimaKu {
-	public $pageLimit = 10;
+	public $pageLimit = 200; # 一度に取得する建物数
+	public $maxLimit = 0; # 最大建物数 0:無限
 
 	function __construct() {
 		$baseUrl = IETOPIA_URL . "/rent_search/area/" . urlencode("東京都-豊島区");
 		$this->baseUrl = $baseUrl;
-		
-		$this->loadUrl( $this->baseUrl . "/limit:" . $this->pageLimit );
 	}
 	# 検索結果を読み込み
 	function loadUrl($url) {
@@ -18,26 +17,47 @@ class IetopiaRentSearchPageToshimaKu {
 		phpQuery::newDocument( $html );
 	}
 	# 建物総数を取得
+	protected $_totalBuilding = false;
 	function totalBuilding() {
+		if ( $this->_totalBuilding !== false ) {
+			return $this->_totalBuilding;
+		}
 		$searchResultNumText = pq("#search_result_num > p")->text();
 		if ( preg_match("/(.+)棟/", $searchResultNumText, $matches) ) {
 			$totalCount = trim($matches[1]);
-			return $totalCount;
+			return $this->_totalBuilding = $totalCount;
 		}
 		throw new ErrorException("検索結果が0件でした");
 	}
 	# 建物一覧を取得
 	function getBuildingList() {
+		$this->loadUrl( $this->baseUrl . "/limit:" . $this->pageLimit );
 		$total = $this->totalBuilding();
+		
+		Log::info([__METHOD__, '$total: '.$total ]);
+		
 		$list = [];
+		$page = 1;
 		while (true) {
+			
+			Log::info([__METHOD__, 'count($list): '.count($list) ]);
+			
 			$buildingItems = pq(".rent_item");
 			foreach ($buildingItems as $item) {
 				$list[] = new IetopiaSearchResultBuilding($item);
+				if ( $this->maxLimit != 0 && $this->maxLimit <= count($list) ) {
+					return $list;
+				}
 			}
-			# TODO: ページング処理を必ず追加する事
-			break;
+			if ( count($list) >= $total ) {
+				break;
+			}
+			$page++;
+			$this->loadUrl( $this->baseUrl . "/page:" . $page . "/limit:" . $this->pageLimit );
 		}
+		
+		Log::info([__METHOD__, 'count($list): '.count($list) ]);
+		
 		return $list;
 	}
 }
@@ -50,6 +70,7 @@ class IetopiaSearchResultBuilding {
 	# 建物名を返す
 	function getName() {
 		$name = pq($this->pqObj)->find("h2")->text();
+		$name  = preg_replace("/\t|\r\n|\r|\n/", " ", $name);
 		return WhiteSpace::clean($name);
 	}
 	# 建物IDを返す

@@ -21,9 +21,7 @@ class Log {
 			}
 		});
 		
-		$outData = call_user_func(function() use($arguments) {
-			return implode(", ", $arguments);
-		});
+		$outData = $arguments[0];
 		
 		$trace = debug_backtrace($limit = 2)[0];
 		$file = $trace["file"];
@@ -70,7 +68,9 @@ interface Logger {
 function logInfo($file, $line, $logLevel) {
 	$now = date_create()->format("Y-m-d H:i:s");
 	$logLevelName = LogLevel::nameByLevel($logLevel);
-	return LOG_ID . "  [$logLevelName] $now $file ($line)" . PHP_EOL;
+	$memoryUsageMB = memory_get_usage() / (1024 * 1024);
+	$memoryUsageMB = round( $memoryUsageMB, 2 );
+	return LOG_ID . "  [$logLevelName] $now $file ($line) memory_usage: " . $memoryUsageMB . "MB" . PHP_EOL;
 }
 class FileLogger implements Logger {
 	function __construct() {
@@ -80,14 +80,13 @@ class FileLogger implements Logger {
 	}
 	function out($text, $file, $line, $logLevel) {
 		
-		$lines = preg_split("/\n|\r|\r\n/", $text);
+		$lines = preg_split("/\r\n|\n|\r/", $text);
 		$splited = "";
 		foreach ($lines as $oneLine) {
 			$splited .= LOG_ID . "  " . $oneLine . PHP_EOL;
 		}
 		
-		$message = logInfo($file, $line, $logLevel) . 
-			$splited . PHP_EOL;
+		$message = logInfo($file, $line, $logLevel) . $splited;
 		
 		$bool = error_log( $message,
 			$this->message_type,

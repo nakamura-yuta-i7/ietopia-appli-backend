@@ -4,11 +4,14 @@ date_default_timezone_set('Asia/Tokyo');
 require_once __DIR__ . "/../vendor/autoload.php";
 define("APP_ROOT", realpath(__DIR__."/../") );
 
+define("IS_PROD", gethostname() != "macbook-pro.local" );
+
 # パスワード
-require_once __DIR__ . "passwords.php";
+require_once __DIR__ . "/passwords.php";
 
 # ライブラリ
 require_once APP_ROOT . "/libs/Json.php";
+require_once APP_ROOT . "/libs/Ltsv.php";
 
 # ログ設定
 require_once APP_ROOT . '/models/logger/Log.php';
