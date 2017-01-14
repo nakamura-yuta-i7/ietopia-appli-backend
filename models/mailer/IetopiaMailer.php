@@ -5,14 +5,15 @@ class IetopiaMailer {
 
 		#$mail->SMTPDebug = 3;
 		$mail->isSMTP();
-		$mail->Host     = 'smtp.mail.yahoo.co.jp';
+		$mail->Host     = IETOPIA_API_SERVICE_SMTP;
 		$mail->SMTPAuth = true;
-		$mail->Username = 'yuta_nakamura_i7@yahoo.co.jp';
+		$mail->Username = IETOPIA_API_SERVICE_EMAIL;
 		$mail->Password = IETOPIA_MAILER_SMTP_PASSWORD;
 		
 		# $mail->isHTML(true);
 
-		$mail->Subject = 'Ietopia API Backend Service Mailer';
+		$mail->setFrom(IETOPIA_API_SERVICE_EMAIL, 'Ietopia API Backend Service');
+		$mail->Subject = (IS_DEV?"TEST ":"");
 		return $mail;
 	}
 }

@@ -8,8 +8,16 @@ class Database {
 	function __call($name, $arguments) {
 		return call_user_func_array([$this->_conn, $name], $arguments);
 	}
-	function findAll() {
-		$sql = " SELECT * FROM " . $this->table;
+	function findAll($params) {
+		$where = call_user_func(function() use($params) {
+			if ( !isset($params["where"]) ) return ""; 
+			return strlen($where) ? " WHERE ". $params["where"] : "";
+		});
+		
+		$join  = isset($params["join"])  ? " ". $params["join"] : "";
+		$fields = isset($params["fields"])  ? $params["fields"] : " * ";
+		$fields = is_array($fields) ? implode(",", $fields) : $fields;
+		$sql = " SELECT {$fields} FROM " . $this->table . " {$join} {$where} ";
 		return $this->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 	}
 	function findOne($where) {
@@ -60,23 +68,5 @@ class Database {
 		$values_string = implode(",", $values_strings );
 		$sql = 'UPDATE '. $this->table .' SET '. $values_string .' WHERE ' . $where;
 		return $this->query($sql);
-	}
-}
-class IetopiaModel extends Database {
-	function __construct() {
-		$conn = ConnectionManager::getConnection("ietopia");
-		$this->setConnection($conn);
-	}
-	function insert($values) {
-		if ( ! array_key_exists("created_at", $values) ) {
-			$values["created_at"] = date_create()->format("Y-m-d H:i:s");
-		}
-		return parent::insert($values);
-	}
-	function update($values, $where) {
-		if ( ! array_key_exists("updated_at", $values) ) {
-			$values["updated_at"] = date_create()->format("Y-m-d H:i:s");
-		}
-		return parent::update($values, $where);
 	}
 }

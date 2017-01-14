@@ -165,6 +165,8 @@ class IetopiaSearchResultRoom {
 	const SHOZOIKAI                = "shozoikai";
 	const SOTOSU                   = "sotosu";
 	const COMMENT                  = "comment";
+	const BASIC_TABLE              = "basic_table";
+	
 	const KAKAKU                   = "kakaku";
 	const SIKIKIN_HOSHOUKIN        = "sikikin_hoshoukin";
 	const REIKIN_SHOKYAKU_SIKIHIKI = "reikin_shokyaku_sikihiki";
@@ -182,6 +184,7 @@ class IetopiaSearchResultRoom {
 	const BIKOU                    = "bikou";
 	const SHUHENSHISETU            = "shuhenshisetu";
 	const TORIHIKITAIYO            = "torihikitaiyo";
+	const DETAIL_TABLE             = "detail_table";
 
 	public $baseUrl;
 	public $didLoaded = false;
@@ -280,6 +283,7 @@ class IetopiaSearchResultRoom {
 		$this->content[static::SHOZOIKAI] = WhiteSpace::clean( $basicVal("所在階") );
 		$this->content[static::SOTOSU] = $basicVal("総戸数");
 		$this->content[static::COMMENT] = $html->find("#admin_comment p")->text();
+		$this->content[static::BASIC_TABLE] = $basic->htmlOuter();
 		
 		# 詳細情報
 		$kakaku = $detail->find("tr:eq(0) th:eq(0)")->next("td")->text();
@@ -300,6 +304,7 @@ class IetopiaSearchResultRoom {
 		$this->content[static::BIKOU] = $detailVal("備考");
 		$this->content[static::SHUHENSHISETU] = $detailVal("周辺");
 		$this->content[static::TORIHIKITAIYO] = $detailVal("取引");
+		$this->content[static::DETAIL_TABLE] = $detail->htmlOuter();
 		
 		# 拡張項目
 		$this->content[static::YATIN_INT] = $this->kakakuToInteger($kakaku);

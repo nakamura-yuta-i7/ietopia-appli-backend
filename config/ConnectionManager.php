@@ -2,8 +2,13 @@
 class ConnectionManager {
 	static function getConnection($name) {
 		switch ($name) {
-			case "ietopia":
-				$dsn = "sqlite:" . APP_ROOT . "/db/ietopia.sqlite";
+			case "ietopia_room":
+				$dsn = "sqlite:" . APP_ROOT . "/db/" . IETOPIA_ROOM_DB;
+				$user = '';
+				$password = '';
+				return new SqliteConnection($dsn, $user, $password);
+			case "ietopia_master":
+				$dsn = "sqlite:" . APP_ROOT . "/db/" . IETOPIA_MASTER_DB;
 				$user = '';
 				$password = '';
 				return new SqliteConnection($dsn, $user, $password);
@@ -20,6 +25,7 @@ class SqliteConnection implements ConnectionInterface {
 		if ( ! $dbh ) {
 			throw new ErrorException("接続に失敗しました  info: ". var_export(func_get_args()));
 		}
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->_dbh = $dbh;
 	}
 	function __call($name, $arguments) {

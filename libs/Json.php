@@ -7,4 +7,8 @@ class Json {
 		}
 		return call_user_func_array("json_encode", $params);
 	}
+	static function decode() {
+		$params = func_get_args();
+		return call_user_func_array("json_decode", $params);
+	}
 }
