@@ -3,18 +3,21 @@ require_once APP_ROOT . "/libs/HttpClient.php";
 require_once APP_ROOT . "/libs/WhiteSpace.php";
 require_once APP_ROOT . "/libs/Json.php";
 
-class IetopiaRentSearchPageToshimaKu {
+class IetopiaRentSearchPageTokyo {
 	public $pageLimit = 200; # 一度に取得する建物数
 	public $maxLimit = 0; # 最大建物数 0:無限
 
 	function __construct() {
-		$baseUrl = IETOPIA_URL . "/rent_search/area/" . urlencode("東京都-豊島区");
+		$baseUrl = IETOPIA_URL . "/rent_search/area/" . urlencode("東京都");
 		$this->baseUrl = $baseUrl;
 	}
 	# 検索結果を読み込み
+	public $didLoaded = false;
 	function loadUrl($url) {
+		if ($this->didLoaded) return;
 		$html = HttpClient::request( $url );
 		phpQuery::newDocument( $html );
+		$this->didLoaded = true;
 	}
 	# 建物総数を取得
 	protected $_totalBuilding = false;
@@ -22,6 +25,7 @@ class IetopiaRentSearchPageToshimaKu {
 		if ( $this->_totalBuilding !== false ) {
 			return $this->_totalBuilding;
 		}
+		$this->loadUrl( $this->baseUrl );
 		$searchResultNumText = pq("#search_result_num > p")->text();
 		if ( preg_match("/(.+)棟/", $searchResultNumText, $matches) ) {
 			$totalCount = trim($matches[1]);

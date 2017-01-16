@@ -6,7 +6,6 @@ class Room extends IetopiaRoomDbModel {
 	public $table = "room";
 	
 	const ID = "id";
-	const ISINACTIVE = "isinactive";
 	const GAIKAN_IMAGES_ID = "gaikan_images_id";
 	
 	function activate($id) {

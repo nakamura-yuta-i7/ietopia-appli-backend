@@ -8,7 +8,7 @@ class Database {
 	function __call($name, $arguments) {
 		return call_user_func_array([$this->_conn, $name], $arguments);
 	}
-	function findAll($params) {
+	function findAll($params=[]) {
 		$where = call_user_func(function() use($params) {
 			if ( !isset($params["where"]) ) return ""; 
 			return strlen($where) ? " WHERE ". $params["where"] : "";

@@ -8,3 +8,6 @@ class IetopiaRoomDbModel extends IetopiaDbModel {
 		$this->setConnection($conn);
 	}
 }
+
+require_once __DIR__ . "/Room.php";
+require_once __DIR__ . "/GaikanImages.php";

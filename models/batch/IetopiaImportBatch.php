@@ -9,13 +9,13 @@ class IetopiaImportBatch extends BatchAbstract {
 		$gaikanImages = new GaikanImages();
 		
 		# 豊島区の建物リストを取得
-		$rentSearchPageToshimaKu = new IetopiaRentSearchPageToshimaKu();
+		$rentSearchPageTokyo = new IetopiaRentSearchPageTokyo();
 		if ( IS_DEV ) {
-			$rentSearchPageToshimaKu->pageLimit = 40; # 開発時の1ページ内件数
-			$rentSearchPageToshimaKu->maxLimit  = 40; # 開発時の最大取得数
+			$rentSearchPageTokyo->pageLimit = 40; # 開発時の1ページ内件数
+			$rentSearchPageTokyo->maxLimit  = 40; # 開発時の最大取得数
 		}
 		
-		$buildingList = $rentSearchPageToshimaKu->getBuildingList();
+		$buildingList = $rentSearchPageTokyo->getBuildingList();
 
 		Log::info([__METHOD__, 'count($buildingList): '.count($buildingList) ]);
 		
