@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . "/../config/bootstrap.php";
-require_once APP_ROOT . "/models/batch/IetopiaNewArrivalImportBatch.php";
+require_once APP_ROOT . "/models/batch/IetopiaPickUpImportBatch.php";
 
 try {
-	$batch = new IetopiaNewArrivalImportBatch();
+	$batch = new IetopiaPickUpImportBatch();
 	$batch->execute();
 
 } catch (Exception $e) {

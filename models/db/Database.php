@@ -65,6 +65,9 @@ class Database {
 		foreach ( $values as $key => $val ) {
 			$values_strings[] = " {$key} = '{$val}' ";
 		}
+		if ( ! $where ) {
+			$where = " 1 = 1 ";
+		}
 		$values_string = implode(",", $values_strings );
 		$sql = 'UPDATE '. $this->table .' SET '. $values_string .' WHERE ' . $where;
 		return $this->query($sql);

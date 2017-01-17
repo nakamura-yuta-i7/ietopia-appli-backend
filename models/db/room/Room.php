@@ -7,7 +7,29 @@ class Room extends IetopiaRoomDbModel {
 	
 	const ID = "id";
 	const GAIKAN_IMAGES_ID = "gaikan_images_id";
+	const NEW_ARRIVAL_FLAG = "new_arrival_flag";
+	const PICKUP_FLAG      = "pickup_flag";
 	
+	function raiseNewArrivalFlag($roomId) {
+		return $this->update([
+			static::NEW_ARRIVAL_FLAG => 1,
+		], static::ID . " = '{$roomId}'");
+	}
+	function dropNewArrivalFlag($where=NULL) {
+		return $this->update([
+			static::NEW_ARRIVAL_FLAG => 0,
+		], $where);
+	}
+	function raisePickUpFlag($roomId) {
+		return $this->update([
+			static::PICKUP_FLAG => 1,
+		], static::ID . " = '{$roomId}'");
+	}
+	function dropPickUpFlag($where=NULL) {
+		return $this->update([
+			static::PICKUP_FLAG => 0,
+		], $where);
+	}
 	function activate($id) {
 		$this->update(
 			[static::ISINACTIVE=>static::ISINACTIVE_OFF],

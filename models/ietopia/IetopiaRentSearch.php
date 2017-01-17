@@ -247,11 +247,26 @@ class IetopiaSearchResultRoom {
 		$html = pq("#contents #article");
 		$basic = pq("#item_info .item_table");
 		$detail = pq("#item_detail .item_table");
-		$basicVal = function($name) use ($basic) {
-			return trim( $basic->find("th:contains('{$name}')")->next("td")->text() );
+		$url = $this->baseUrl;
+		# フォーマットチェック
+		$formatCheck = function($name, $pqObj) use($url) {
+			$thInnerText = $pqObj->text();
+			if ( mb_strpos($thInnerText, $name) === FALSE ) {
+				throw new ErrorException(
+					"見出しセル「{$name}」が見つかりませんでした  ".
+					Json::encode(compact("url", "thInnerText")));
+			}
 		};
-		$detailVal = function($name) use ($detail) {
-			return trim( $detail->find("th:contains('{$name}')")->next("td")->text() );
+		# 見出し名を指定して値を導出
+		$basicVal = function($name) use ($basic, $formatCheck) {
+			$th = $basic->find("th:contains('{$name}')");
+			$formatCheck($name, $th);
+			return trim( $th->next("td")->text() );
+		};
+		$detailVal = function($name) use ($detail, $formatCheck) {
+			$th = $detail->find("th:contains('{$name}')");
+			$formatCheck($name, $th);
+			return trim( $th->next("td")->text() );
 		};
 		# MEMO: phpQueryの:containsセレクターにはバグがあり、tr:eq() th:eq() で暫定取得している
 		#       原因不明な為、一旦はこのような方法で回避していることに注意！
@@ -298,7 +313,7 @@ class IetopiaSearchResultRoom {
 		$this->content[static::SONOTA_HIYO] = $detailVal("その他費用");
 		$this->content[static::MADORI_UTIWAKE] = trim( $detail->find("tr:eq(6) th:eq(1)")->next("td")->text() );
 		$this->content[static::BALCONY_MENSEKI] = $detailVal("バルコニー面積");
-		$this->content[static::CHUSHAJO] = $detailVal("駐車場");
+		$this->content[static::CHUSHAJO] = $detailVal("駐車");
 		$this->content[static::HOKENRYO] = $detailVal("保険料");
 		$this->content[static::KEIYAKUKIKAN] = $detailVal("契約期間");
 		$this->content[static::HIKIWATASHI] = $detailVal("引渡");
