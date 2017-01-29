@@ -8,6 +8,7 @@ define("IS_PROD", gethostname() != "macbook-pro.local" );
 define("IS_DEV", ! IS_PROD );
 
 # 家とぴあAPI
+define("IETOPIA_API_SERVICE_NAME", "Ietopia API Backend Service");
 define("IETOPIA_API_SERVICE_SMTP", "smtp.mail.yahoo.co.jp");
 define("IETOPIA_API_SERVICE_EMAIL", "yuta_nakamura_i7@yahoo.co.jp");
 define("IETOPIA_API_ADMIN_EMAIL", "yuta.nakamura.i7@gmail.com");

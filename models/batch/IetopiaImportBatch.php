@@ -10,10 +10,10 @@ class IetopiaImportBatch extends BatchAbstract {
 		
 		# 豊島区の建物リストを取得
 		$rentSearchPageTokyo = new IetopiaRentSearchPageTokyo();
-		if ( IS_DEV ) {
-			$rentSearchPageTokyo->pageLimit = 40; # 開発時の1ページ内件数
-			$rentSearchPageTokyo->maxLimit  = 40; # 開発時の最大取得数
-		}
+		# if ( IS_DEV ) {
+		# 	$rentSearchPageTokyo->pageLimit = 40; # 開発時の1ページ内件数
+		# 	$rentSearchPageTokyo->maxLimit  = 40; # 開発時の最大取得数
+		# }
 		
 		$buildingList = $rentSearchPageTokyo->getBuildingList();
 
@@ -92,8 +92,10 @@ class IetopiaImportBatch extends BatchAbstract {
 		$mail = IetopiaMailer::getInstance();
 		$mail->addAddress(IETOPIA_API_ADMIN_EMAIL);
 		$mail->Subject .= __METHOD__ . " Finish";
-		$mail->Body = 
-"取込処理が完了しました。
+		$mail->Body = IETOPIA_API_SERVICE_NAME .
+" からの自動送信メールです。
+
+物件情報の取込が完了しました。
 
 同期:建物件数: ". count($buildingList) ."
 同期:部屋件数: ". $roomModel->findCount("isinactive = 0") ."

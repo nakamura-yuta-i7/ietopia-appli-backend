@@ -57,6 +57,7 @@ class IetopiaRentSearchPageTokyo {
 				break;
 			}
 			$page++;
+			$this->didLoaded = false;
 			$this->loadUrl( $this->baseUrl . "/page:" . $page . "/limit:" . $this->pageLimit );
 		}
 		
@@ -200,7 +201,7 @@ class IetopiaSearchResultRoom {
 	}
 	function BUILDING_ID() {
 		$url = $this->baseUrl;
-		if ( preg_match("/.+\/([1-9].+)\//", $url, $matches) ) {
+		if ( preg_match("/.+\/([0-9]+)\//", $url, $matches) ) {
 			return $matches[1];
 		}
 		throw new ErrorException("建物IDが見つけられませんでした  url: {$url}");

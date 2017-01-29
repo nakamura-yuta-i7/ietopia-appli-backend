@@ -12,7 +12,7 @@ class IetopiaMailer {
 		
 		# $mail->isHTML(true);
 
-		$mail->setFrom(IETOPIA_API_SERVICE_EMAIL, 'Ietopia API Backend Service');
+		$mail->setFrom(IETOPIA_API_SERVICE_EMAIL, IETOPIA_API_SERVICE_NAME);
 		$mail->Subject = (IS_DEV?"TEST ":"");
 		return $mail;
 	}
