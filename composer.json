@@ -1,5 +1,8 @@
 {
     "name": "yuta/ietopia",
+    "scripts": {
+        "server:up": "cd webroot ; php -S 0.0.0.0:8080"
+    },
     "require": {
         "electrolinux/phpquery": "^0.9.6",
         "phpmailer/phpmailer": "^5.2"
