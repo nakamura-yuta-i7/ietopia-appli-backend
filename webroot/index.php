@@ -26,6 +26,7 @@ class Router {
 		if ( !file_exists($viewPath) ) {
 			throw new ErrorException(404);
 		}
+		header("Access-Control-Allow-Origin: *");
 		include($viewPath);
 	}
 }

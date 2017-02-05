@@ -1,7 +1,7 @@
 {
     "name": "yuta/ietopia",
     "scripts": {
-        "server:up": "cd webroot ; php -S 0.0.0.0:8080"
+        "server:up": "cd webroot ; php -S 0.0.0.0:8888"
     },
     "require": {
         "electrolinux/phpquery": "^0.9.6",
