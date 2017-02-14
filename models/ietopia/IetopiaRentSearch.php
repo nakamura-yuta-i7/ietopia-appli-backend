@@ -91,12 +91,22 @@ class IetopiaSearchResultBuilding {
 		$href = pq($this->pqObj)->find("h2 > a")->attr("href");
 		return $this->baseUrl . $href;
 	}
-	# 建物写真URLリストを返す
-	function getGaikanImageUrls() {
+	public $isLoaded = false;
+	function loadDetailUrl() {
+		if ( $this->isLoaded ) return;
 		$url = $this->getDetailUrl();
 		$html = HttpClient::request( $url );
 		phpQuery::newDocument( $html );
-		
+		$this->isLoaded = true;
+	}
+	# 建物写真メインURLを返す
+	function getGaikanImageMainUrl() {
+		$this->loadDetailUrl();
+		return $this->baseUrl . pq("#photo_album a")->attr("href");
+	}
+	# 建物写真URLリストを返す
+	function getGaikanImageUrls() {
+		$this->loadDetailUrl();
 		$list = [];
 		foreach ( pq("#thumb_list ul li a img") as $thumImage ) {
 			$src = pq($thumImage)->attr("src");
@@ -154,6 +164,7 @@ class IetopiaSearchResultRoom {
 	const CATCHCOPY                = "catchcopy";
 	const SHOZAITI                 = "shozaiti";
 	const KOTU                     = "kotu";
+	const KOTU_FIRST_LINE          = "kotu_first_line";
 	const TINRYO                   = "tinryo";
 	const KANRIHI_KYOEKIHI         = "kanrihi_kyoekihi";
 	const SIKIKIN                  = "sikikin";
@@ -269,6 +280,15 @@ class IetopiaSearchResultRoom {
 			$formatCheck($name, $th);
 			return trim( $th->next("td")->text() );
 		};
+		$detailDivsVal = function($name) use ($detail, $formatCheck) {
+			$th = $detail->find("th:contains('{$name}')");
+			$formatCheck($name, $th);
+			$list = [];
+			foreach ($th->next("td")->find("div") as $div) {
+				$list[] = trim( pq($div)->text() );
+			}
+			return $list;
+		};
 		# MEMO: phpQueryの:containsセレクターにはバグがあり、tr:eq() th:eq() で暫定取得している
 		#       原因不明な為、一旦はこのような方法で回避していることに注意！
 		
@@ -287,6 +307,7 @@ class IetopiaSearchResultRoom {
 		$this->content[static::CATCHCOPY] = $html->find("#appeal_point")->text();
 		$this->content[static::SHOZAITI] = $detailVal("所在地");
 		$this->content[static::KOTU] = $detailVal("交通");
+		$this->content[static::KOTU_FIRST_LINE] = reset($detailDivsVal("交通"));
 		$this->content[static::TINRYO] = $basicVal("賃料");
 		$this->content[static::KANRIHI_KYOEKIHI] = $basicVal("管理費");
 		$this->content[static::SIKIKIN] = $basicVal("敷金");

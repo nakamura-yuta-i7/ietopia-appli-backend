@@ -10,13 +10,13 @@ class IetopiaImportBatch extends BatchAbstract {
 		
 		# 豊島区の建物リストを取得
 		$rentSearchPageTokyo = new IetopiaRentSearchPageTokyo();
-		# if ( IS_DEV ) {
-		# 	$rentSearchPageTokyo->pageLimit = 40; # 開発時の1ページ内件数
-		# 	$rentSearchPageTokyo->maxLimit  = 40; # 開発時の最大取得数
-		# }
+		if ( IS_DEV ) {
+			$rentSearchPageTokyo->pageLimit = 10; # 開発時の1ページ内件数
+			$rentSearchPageTokyo->maxLimit  = 10; # 開発時の最大取得数
+		}
 		
 		$buildingList = $rentSearchPageTokyo->getBuildingList();
-
+		
 		Log::info([__METHOD__, 'count($buildingList): '.count($buildingList) ]);
 		
 		if ( count(count($buildingList)) == 0 ) {
@@ -27,6 +27,10 @@ class IetopiaImportBatch extends BatchAbstract {
 		# 取得した建物リスト以外は
 		# 最後に無効化する為、PKをメモしておく
 		$importedBuildingIds = [];
+		# 取込部屋ID
+		$importedRoomIds = [];
+		# エラー件数
+		$errorCount = 0;
 		
 		foreach ( $buildingList as $i => $building ) {
 			$i++;
@@ -44,8 +48,9 @@ class IetopiaImportBatch extends BatchAbstract {
 			try {
 				# 外観写真
 				$gaikanImages->upsert([
-					$gaikanImages::ID     => $buildingId,
-					$gaikanImages::IMAGES => Json::encode(
+					$gaikanImages::ID         => $buildingId,
+					$gaikanImages::IMAGE_MAIN => $building->getGaikanImageMainUrl(),
+					$gaikanImages::IMAGES     => Json::encode(
 						$building->getGaikanImageUrls()
 					),
 				], /* pk */ $gaikanImages::ID);
@@ -62,6 +67,9 @@ class IetopiaImportBatch extends BatchAbstract {
 					# 有効化もする
 					$roomModel->activate($roomId);
 					
+					# 取り込みした部屋以外の部屋は無効化する為メモ
+					$importedRoomIds[] = $roomId;
+					
 					$roomName = $room->getContent()[$room::NAME];
 					$roomUrl  = $room->detailUrl();
 					Log::info(Ltsv::encode(compact("count", "roomId", "roomUrl")));
@@ -69,15 +77,23 @@ class IetopiaImportBatch extends BatchAbstract {
 			} catch (Exception $e) {
 				Log::fatal(compact("count", "name", "detailUrl"));
 				Log::fatal($e->getMessage());
+				$errorCount++;
 			}
+		}
+		
+		# エラー件数が多すぎたら取込処理を中止
+		if ( $errorCount > 20 ) {
+			throw new ErrorException("物件取込エラーが多すぎる為処理を中止しました。");
 		}
 		
 		# 建物IDから部屋を無効化
 		# 条件
 		$inactivateCondition = 
-			# 今回取込対象以外、且つ
-			$roomModel::GAIKAN_IMAGES_ID . " NOT IN (". implode(",", $importedBuildingIds) .")" .
-			# まだ無効化されてない部屋を探す
+			# # 今回取込対象以外、且つ
+			# $roomModel::GAIKAN_IMAGES_ID . " NOT IN (". implode(",", $importedBuildingIds) .")" .
+			# 取り込んだ部屋以外は無効化したい。
+			$roomModel::ID . " NOT IN (". implode(",", $importedRoomIds) .") " .
+			# ※まだ無効化されてない部屋を探す
 			" AND " . $roomModel::ISINACTIVE . " = " . $roomModel::ISINACTIVE_OFF ;
 		# 無効化する件数
 		$inactivateCount = $roomModel->findCount($inactivateCondition);

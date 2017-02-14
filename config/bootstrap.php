@@ -4,7 +4,7 @@ date_default_timezone_set('Asia/Tokyo');
 require_once __DIR__ . "/../vendor/autoload.php";
 define("APP_ROOT", realpath(__DIR__."/../") );
 
-define("IS_PROD", gethostname() != "macbook-pro.local" );
+define("IS_PROD", gethostname() == "HONBAN-SERVER" );
 define("IS_DEV", ! IS_PROD );
 
 # 家とぴあAPI

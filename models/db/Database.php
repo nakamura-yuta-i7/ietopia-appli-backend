@@ -9,19 +9,25 @@ class Database {
 		return call_user_func_array([$this->_conn, $name], $arguments);
 	}
 	function findAll($params=[]) {
+		$sql = $this->createSelectSql($params);
+		return $this->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+	}
+	function createSelectSql($params=[]) {
 		$where = call_user_func(function() use($params) {
 			if ( !isset($params["where"]) ) return ""; 
-			return strlen($where) ? " WHERE ". $params["where"] : "";
+			return strlen($params["where"]) ? " WHERE ". $params["where"] : "";
 		});
-		
 		$join  = isset($params["join"])  ? " ". $params["join"] : "";
 		$fields = isset($params["fields"])  ? $params["fields"] : " * ";
 		$fields = is_array($fields) ? implode(",", $fields) : $fields;
-		$sql = " SELECT {$fields} FROM " . $this->table . " {$join} {$where} ";
-		return $this->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		$group  = isset($params["group"])  ? "GROUP BY ". $params["group"] : "";
+		$order  = isset($params["order"])  ? "ORDER BY ". $params["order"] : "";
+		$limit  = isset($params["limit"])  ? "LIMIT ". $params["limit"] : "";
+		$offset = isset($params["offset"])  ? "OFFSET ". $params["offset"] : "";
+		return " SELECT {$fields} FROM " . $this->table . " {$join} {$where} {$group} {$order} {$limit} {$offset}";
 	}
-	function findOne($where) {
-		$sql = " SELECT * FROM " . $this->table . " WHERE " . $where;
+	function findOne($params) {
+		$sql = $this->createSelectSql($params);
 		return $this->query($sql)->fetch(PDO::FETCH_ASSOC);
 	}
 	function findCount($where) {

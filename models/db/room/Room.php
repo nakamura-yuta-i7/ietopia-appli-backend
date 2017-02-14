@@ -60,6 +60,9 @@ class Room extends IetopiaRoomDbModel {
 	static function detailUrlField() {
 		return "'". IETOPIA_DETAIL_BASE_URL . "/" ."' || gaikan_images.id || '/' || room.id";
 	}
+	static function gaikanImageMainField() {
+		return "gaikan_images.image_main";
+	}
 	static function gaikanImagesField() {
 		return "gaikan_images.images";
 	}
