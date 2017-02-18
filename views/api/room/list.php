@@ -5,7 +5,15 @@ $model = new Room();
 # 駅で検索: 「交通フィールド」のテキスト検索
 # こだわり条件: マスターDBで定義されたリストにある条件で「設備・条件フィールド」をテキスト検索
 
-$where = " isinactive = 0 ";
+$where = call_user_func(function() {
+	$where = " isinactive = 0 ";
+	
+	foreach ( $_GET as $key => $val ) {
+		
+	}
+	return $where;
+});
+
 $fields = [
 	"room.id",
 	"room.yatin_int",
