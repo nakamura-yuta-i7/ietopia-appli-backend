@@ -13,7 +13,10 @@ try {
 	}
 	
 	header('HTTP', true, 500);
-	Log::fatal($e);
+	echo Json::encode([
+		"error" => $e->getMessage(),
+	]);
+	//Log::fatal($e);
 }
 
 class Router {
@@ -26,7 +29,11 @@ class Router {
 		if ( !file_exists($viewPath) ) {
 			throw new ErrorException(404);
 		}
-		header("Access-Control-Allow-Origin: *");
+		$HTTP_ORIGIN = $_SERVER["HTTP_ORIGIN"];
+		header("Access-Control-Allow-Origin: {$HTTP_ORIGIN}");
+		# header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, x-csrf-token");
+		header('Access-Control-Allow-Credentials: true');
+		
 		include($viewPath);
 	}
 }

@@ -8,6 +8,22 @@ class IetopiaDbModel extends Database {
 	const ISINACTIVE_ON  = 1;
 	const ISINACTIVE_OFF = 0;
 	
+	public $defaultWhere = " isinactive = 0 ";
+	function createSelectSql($params=[]) {
+		$defaultWhere = $this->defaultWhere;
+		$params["where"] = call_user_func(
+			function() use($params, $defaultWhere) {
+				if (
+					! isset($params["where"]) ||
+					! strlen(trim($params["where"]))
+					) {
+						return $defaultWhere;
+					}
+					return $params["where"] ." AND ". $defaultWhere;
+			}
+		);
+		return parent::createSelectSql($params);
+	}
 	function insert($values) {
 		if ( ! array_key_exists("created_at", $values) ) {
 			$values["created_at"] = date_create()->format("Y-m-d H:i:s");

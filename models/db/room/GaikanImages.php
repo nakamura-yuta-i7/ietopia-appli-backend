@@ -6,4 +6,5 @@ class GaikanImages extends IetopiaRoomDbModel {
 	const ID = "id";
 	const IMAGES = "images";
 	const IMAGE_MAIN = "image_main";
+	public $defaultWhere = " 1 = 1 ";
 }

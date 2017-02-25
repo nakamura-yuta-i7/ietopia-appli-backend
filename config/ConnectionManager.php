@@ -12,6 +12,11 @@ class ConnectionManager {
 				$user = '';
 				$password = '';
 				return new SqliteConnection($dsn, $user, $password);
+			case "ietopia_user":
+				$dsn = "sqlite:" . APP_ROOT . "/db/" . IETOPIA_USER_DB;
+				$user = '';
+				$password = '';
+				return new SqliteConnection($dsn, $user, $password);
 			default:
 				throw new ErrorException("未定義のデータベース接続を呼び出そうとしました");
 		}

@@ -46,7 +46,9 @@ require_once APP_ROOT . "/models/ietopia/IetopiaRentSearch.php";
 # データベース
 define("IETOPIA_ROOM_DB", "ietopia_room.sqlite");
 define("IETOPIA_MASTER_DB", "ietopia_master.sqlite");
+define("IETOPIA_USER_DB", "ietopia_user.sqlite");
 require_once __DIR__ . "/ConnectionManager.php";
 require_once APP_ROOT . "/models/db/room/IetopiaRoomDbModel.php";
 require_once APP_ROOT . "/models/db/master/IetopiaMasterDbModel.php";
+require_once APP_ROOT . "/models/db/user/IetopiaUserDbModel.php";
 
