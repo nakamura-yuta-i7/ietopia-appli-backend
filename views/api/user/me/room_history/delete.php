@@ -1,5 +1,5 @@
 <?php
-$uuid = $_GET["uuid"];
+$uuid = Application::getInstance()->getUserWithAuthCheck()["uuid"];
 $historyId = $_GET["history_id"];
 
 try {

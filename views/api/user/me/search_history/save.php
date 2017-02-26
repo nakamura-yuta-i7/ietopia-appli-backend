@@ -1,6 +1,6 @@
 <?php
-$uuid = $_GET["uuid"];
-$searchParamsJson = $_GET["params_json"];
+$uuid = Application::getInstance()->getUserWithAuthCheck()["uuid"];
+$searchParamsJson = $_POST["params_json"];
 
 try {
 	SearchHistory::saveParams($uuid, $searchParamsJson);

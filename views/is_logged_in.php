@@ -1,4 +1,3 @@
 <?php
-session_start();
-$bool = isset($_SESSION["uuid"]) && $_SESSION["uuid"];
+$bool = Application::getInstance()->isLoggedIn();
 echo JSON::encode( "{$bool}" );

@@ -1,5 +1,5 @@
 <?php
-$uuid = $_GET["uuid"];
+$uuid = Application::getInstance()->getUserWithAuthCheck()["uuid"];
 $roomId = $_GET["room_id"];
 
 try {

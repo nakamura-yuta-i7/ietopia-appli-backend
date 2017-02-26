@@ -4,30 +4,35 @@ require_once __DIR__ . "/../config/bootstrap.php";
 try {
 	$router = new Router();
 	$router->dispatch();
+	return;
+	
+} catch (NotFoundError $e) {
+	
+	http_response_code(404);
 	
 } catch (Exception $e) {
 	
-	if ( $e->getMessage() == 404 ) {
-		header("HTTP/1.0 404 Not Found");
-		return;
-	}
-	
-	header('HTTP', true, 500);
-	echo Json::encode([
-		"error" => $e->getMessage(),
-	]);
-	//Log::fatal($e);
+	http_response_code(500);
 }
+echo Json::encode([
+	"error" => $e->getMessage(),
+]);
+//Log::fatal($e);
 
+
+
+function PATH_INFO() {
+	return preg_replace("/\?.+/", "", $_SERVER["REQUEST_URI"]);
+};
 class Router {
 	function __construct() {
-		$this->path     = $_SERVER["PATH_INFO"];
+		$this->path     = PATH_INFO();
 		$this->requests = $_REQUEST;
 	}
 	function dispatch() {
-		$viewPath = APP_ROOT . "/views" . $_SERVER["PATH_INFO"] . ".php";
+		$viewPath = APP_ROOT . "/views" . PATH_INFO() . ".php";
 		if ( !file_exists($viewPath) ) {
-			throw new ErrorException(404);
+			throw new NotFoundError("Not Found");
 		}
 		$HTTP_ORIGIN = $_SERVER["HTTP_ORIGIN"];
 		header("Access-Control-Allow-Origin: {$HTTP_ORIGIN}");
@@ -37,6 +42,7 @@ class Router {
 		include($viewPath);
 	}
 }
+
 
 # echo "家とぴあAPI Backend Service";
 # $_SERVER
