@@ -1,3 +1,5 @@
+allow from all
+
 <IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteBase /home/sakuras/www/appli.ietopia-services.com/webroot/
