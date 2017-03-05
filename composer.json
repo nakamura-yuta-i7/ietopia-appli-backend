@@ -2,7 +2,7 @@
     "name": "yuta/ietopia",
     "scripts": {
         "server:up": "cd webroot && php -S 0.0.0.0:8888",
-        "import:rooms": "php ./bin/ietopia_import.php",
+        "import:rooms": "export COMPOSER_PROCESS_TIMEOUT=9999 && php ./bin/ietopia_import.php",
         "import:master": "php ./bin/ietopia_master_import.php",
         "import:new_arrival": "php ./bin/ietopia_new_arrival_import.php",
         "import:new_arrival": "php ./bin/ietopia_pickup_import.php"

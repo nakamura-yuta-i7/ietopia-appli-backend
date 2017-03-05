@@ -5,14 +5,7 @@ $model = new Room();
 # 駅で検索: 「交通フィールド」のテキスト検索
 # こだわり条件: マスターDBで定義されたリストにある条件で「設備・条件フィールド」をテキスト検索
 
-$where = call_user_func(function() {
-	$where = " isinactive = 0 ";
-	
-	foreach ( $_GET as $key => $val ) {
-		
-	}
-	return $where;
-});
+$where = Room::createSearchCondition();
 
 $fields = [
 	"room.id",
@@ -25,7 +18,20 @@ $fields = [
 	Room::gaikanImagesField() . " AS gaikan_images",
 	Room::detailUrlField() . " AS detail_url",
 ];
-$limit = 10;
+$limit = createRoomSearchLimit();
+$order = createOrder();
 echo Json::encode(
-	$model->findAll(compact("fields","where","limit"))
+	$model->findAll(compact("fields","where","limit","order"))
 );
+
+function createOrder() {
+	$item = isset($_REQUEST["order_item"]) ? 
+		Sqlite3::escapeString($_REQUEST["order_item"]) : " room.yatin_int ";
+	$order = isset($_REQUEST["order"]) ? 
+		SQLite3::escapeString($_REQUEST["order"]) : " ASC ";
+	return " {$item} {$order} ";
+}
+function createRoomSearchLimit() {
+	$limit = 50;
+	return $limit;
+}

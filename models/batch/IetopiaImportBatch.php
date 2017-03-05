@@ -11,8 +11,8 @@ class IetopiaImportBatch extends BatchAbstract {
 		# 豊島区の建物リストを取得
 		$rentSearchPageTokyo = new IetopiaRentSearchPageTokyo();
 		if ( IS_DEV ) {
-			$rentSearchPageTokyo->pageLimit = 10; # 開発時の1ページ内件数
-			$rentSearchPageTokyo->maxLimit  = 10; # 開発時の最大取得数
+			$rentSearchPageTokyo->pageLimit = 100; # 開発時の1ページ内件数
+			$rentSearchPageTokyo->maxLimit  = 100; # 開発時の最大取得数
 		}
 		
 		$buildingList = $rentSearchPageTokyo->getBuildingList();

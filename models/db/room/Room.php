@@ -66,4 +66,86 @@ class Room extends IetopiaRoomDbModel {
 	static function gaikanImagesField() {
 		return "gaikan_images.images";
 	}
+	static function createSearchCondition() {
+		Log::info($_REQUEST);
+		$conditions = [];
+		$conditions[] = " isinactive = 0 ";
+		
+		function createLikeOrConditions($key, $field) {
+			$values = $_REQUEST[$key];
+			$values = is_array($values) ? $values : [$values];
+			$ORs = [];
+			foreach ($values as $value) {
+				$ORs[] = " {$field} LIKE '%". Sqlite3::escapeString($value) ."%' ";
+			}
+			if ( $ORs ) {
+				return " ( ". implode($ORs, " OR ") ." ) ";
+			}
+			return "";
+		}
+		
+		foreach ( $_REQUEST as $key => $val ) {
+			if ( $key == "word" && $val ) {
+				
+			}
+			if ( $key == "yatin-min" && $val ) {
+				$conditions[] = " yatin_int >= " . Sqlite3::escapeString($_REQUEST["yatin-min"]);
+			}
+			if ( $key == "yatin-max" && $val ) {
+				$conditions[] = " yatin_int <= " . Sqlite3::escapeString($_REQUEST["yatin-max"]);
+			}
+			if ( $key == "rosen" && $val ) {
+				# 路線名は部屋テーブルに無いかな
+				# $conditions[] = " yatin_int <= " . Sqlite3::escapeString($_REQUEST["rosen"]);
+			}
+			if ( $key == "station" && $val ) {
+				$field = "kotu";
+				$orConditions = createLikeOrConditions($key, $field);
+				if ( $orConditions ) $conditions[] = $orConditions;
+			}
+			if ( $key == "madori" && $val ) {
+				$field = "madori";
+				$orConditions = createLikeOrConditions($key, $field);
+				if ( $orConditions ) $conditions[] = $orConditions;
+			}
+			if ( $key == "menseki" && $val ) {
+				$vals = is_array($val) ? $val : [$val];
+				$orConditions = [];
+				foreach ($vals as $value) {
+					$min = explode("-", $value)[0];
+					$max = explode("-", $value)[1];
+					$orConditions[] = " ( menseki_int >= {$min} AND menseki_int <= {$max} ) ";
+				}
+				if ( $orConditions ) $conditions[] = " ( ". implode($orConditions, " OR ") ." ) ";
+			}
+			if ( $key == "ekitoho" && $val ) {
+				$ORs = [];
+				foreach (range(0, $val) as $int) {
+					$toho = "徒歩{$int}";
+					$ORs[] = " kotu LIKE '%". Sqlite3::escapeString($toho) ."%' ";
+				}
+				if ($ORs) $conditions[] = " ( ". implode($ORs, " OR ") ." ) ";
+			}
+			if ( $key == "tikunensu" && $val ) {
+				$ORs = [];
+				foreach (range(0, $val) as $int) {
+					if ( $int == 0 ) {
+						$tiku = "(築1年以内)";
+					} else {
+						$tiku = "(築{$int}年)";
+					}
+					$ORs[] = " tikunensu LIKE '%". Sqlite3::escapeString($tiku) ."%' ";
+				}
+				if ($ORs) $conditions[] = " ( ". implode($ORs, " OR ") ." ) ";
+			}
+			if ( $key == "kodawari_joken" && $val ) {
+				$field = "setubi_joken";
+				$orConditions = createLikeOrConditions($key, $field);
+				if ( $orConditions ) $conditions[] = $orConditions;
+			}
+		}
+		$where = $where . implode( $conditions, " AND " );
+		Log::info(compact("conditions","where"));
+		return $where;
+	}
 }

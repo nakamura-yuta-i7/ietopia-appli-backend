@@ -8,6 +8,11 @@ class Database {
 	function __call($name, $arguments) {
 		return call_user_func_array([$this->_conn, $name], $arguments);
 	}
+	function findList($params=[], $key) {
+		return array_map(function($row) use($key) {
+			return $row[$key];
+		}, $this->findAll($params));
+	}
 	function findAll($params=[]) {
 		$sql = $this->createSelectSql($params);
 		return $this->query($sql)->fetchAll(PDO::FETCH_ASSOC);
