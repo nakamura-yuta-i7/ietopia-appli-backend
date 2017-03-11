@@ -8,6 +8,11 @@ class IetopiaUserDbModel extends IetopiaDbModel {
 }
 class Favorite extends IetopiaUserDbModel {
 	public $table = "favorite";
+	static function getListByUserId($userId) {
+		$where = " user_id = '{$userId}' ";
+		$self = new static;
+		return $self->findList(compact("where"), $key="room_id");
+	}
 	static function saveRoomId($uuid, $roomId) {
 		$userId = User::getMe($uuid)["id"];
 		$roomId = SQLite3::escapeString($roomId);
@@ -68,6 +73,12 @@ class SearchHistory extends IetopiaUserDbModel {
 		];
 		$self->upsert($values, $pk="user_id");
 	}
+	static function getByUserId($userId) {
+		$where = " user_id = '{$userId}' ";
+		$self = new static;
+		$result = $self->findOne(compact("where"));
+		return $result ? $result : [];
+	}
 }
 class User extends IetopiaUserDbModel {
 	public $table = "user";
@@ -86,6 +97,11 @@ class User extends IetopiaUserDbModel {
 		if ( ! $user ) {
 			throw new ErrorException("Not found user by uuid.  uuid: {$uuid}");
 		}
+		$result = SearchHistory::getByUserId($user["id"]);
+		$user["search_history"] = $result ? Json::decode($result["params_json"]) : [];
+		
+		$user["favorite"] = Favorite::getListByUserId($user["id"]);
+		
 		return $user;
 	}
 	static function save($uuid, $params=[]) {
