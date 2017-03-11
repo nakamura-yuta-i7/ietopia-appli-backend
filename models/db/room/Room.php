@@ -10,6 +10,18 @@ class Room extends IetopiaRoomDbModel {
 	const NEW_ARRIVAL_FLAG = "new_arrival_flag";
 	const PICKUP_FLAG      = "pickup_flag";
 	
+	static function createOrder($params) {
+		$item = isset($params["order_item"]) ? 
+			Sqlite3::escapeString($params["order_item"]) : " room.yatin_int ";
+		$order = isset($params["order"]) ? 
+			SQLite3::escapeString($params["order"]) : " ASC ";
+		return " {$item} {$order} ";
+	}
+	static function createRoomSearchLimit($params) {
+		$limit = 50;
+		return $limit;
+	}
+	
 	function raiseNewArrivalFlag($roomId) {
 		return $this->update([
 			static::NEW_ARRIVAL_FLAG => 1,
@@ -67,7 +79,6 @@ class Room extends IetopiaRoomDbModel {
 		return "gaikan_images.images";
 	}
 	static function createSearchCondition() {
-		Log::info($_REQUEST);
 		$conditions = [];
 		$conditions[] = " isinactive = 0 ";
 		
@@ -84,9 +95,18 @@ class Room extends IetopiaRoomDbModel {
 			return "";
 		}
 		
+		function createConcatStatement($values) {
+			return implode(" || ", $values);
+		}
+		
 		foreach ( $_REQUEST as $key => $val ) {
 			if ( $key == "word" && $val ) {
-				
+				$fields = createConcatStatement([
+					"name_full", "catchcopy", "shozaiti", "kotu", "comment",
+					"basic_table", "detail_table",
+				]);
+				$val = Sqlite3::escapeString($val);
+				$conditions[] = " {$fields} LIKE '%{$val}%' ";
 			}
 			if ( $key == "yatin-min" && $val ) {
 				$conditions[] = " yatin_int >= " . Sqlite3::escapeString($_REQUEST["yatin-min"]);
