@@ -115,6 +115,10 @@ class User extends IetopiaUserDbModel {
 		
 		$user["favorite"] = Favorite::getListByUserId($user["id"]);
 		
+		foreach ( $user as $k => $v ) {
+			if (is_null($v)) $user[$k] = "";
+		}
+		
 		return $user;
 	}
 	static function save($uuid, $params=[]) {
