@@ -11,10 +11,28 @@ class Room extends IetopiaRoomDbModel {
 	const PICKUP_FLAG      = "pickup_flag";
 	
 	static function createOrder($params) {
-		$item = isset($params["order_item"]) ? 
-			Sqlite3::escapeString($params["order_item"]) : " room.yatin_int ";
-		$order = isset($params["order"]) ? 
-			SQLite3::escapeString($params["order"]) : " ASC ";
+		if ( ! isset($params["sort"]) || ! $params["sort"] ) {
+			$item = " room.yatin_int ";
+			$order = " ASC ";
+			return " {$item} {$order} ";
+		}
+		switch ($params["sort"]) {
+			case "賃料の安い順": 
+				$item = " room.yatin_int ";
+				$order = " ASC ";
+				break;
+			case "面積の広い順": 
+				$item = " room.menseki_int ";
+				$order = " DESC ";
+				break;
+			case "新着順": 
+				$item = " room.new_arrival_flag ";
+				$order = " DESC ";
+				break;
+			default:
+				$item = "";
+				$order = "";
+		}
 		return " {$item} {$order} ";
 	}
 	static function createRoomSearchLimit($params) {
@@ -105,8 +123,11 @@ class Room extends IetopiaRoomDbModel {
 					"name_full", "catchcopy", "shozaiti", "kotu", "comment",
 					"basic_table", "detail_table",
 				]);
-				$val = Sqlite3::escapeString($val);
-				$conditions[] = " {$fields} LIKE '%{$val}%' ";
+				$values = explode(" ", $val);
+				foreach ($values as $v) {
+					$v = Sqlite3::escapeString($v);
+					$conditions[] = " {$fields} LIKE '%{$v}%' ";
+				}
 			}
 			if ( $key == "yatin-min" && $val ) {
 				$conditions[] = " yatin_int >= " . Sqlite3::escapeString($_REQUEST["yatin-min"]);
@@ -165,7 +186,6 @@ class Room extends IetopiaRoomDbModel {
 			}
 		}
 		$where = $where . implode( $conditions, " AND " );
-		Log::info(compact("conditions","where"));
 		return $where;
 	}
 }

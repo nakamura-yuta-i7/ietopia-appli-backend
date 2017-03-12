@@ -98,7 +98,7 @@ class User extends IetopiaUserDbModel {
 			throw new ErrorException("Not found user by uuid.  uuid: {$uuid}");
 		}
 		$result = SearchHistory::getByUserId($user["id"]);
-		$user["search_history"] = $result ? Json::decode($result["params_json"]) : [];
+		$user["search_history"] = $result ? Json::decode($result["params_json"]) : ["word"=>""];
 		
 		$user["favorite"] = Favorite::getListByUserId($user["id"]);
 		

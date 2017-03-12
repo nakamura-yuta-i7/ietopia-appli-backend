@@ -26,7 +26,7 @@ class Database {
 		$fields = isset($params["fields"])  ? $params["fields"] : " * ";
 		$fields = is_array($fields) ? implode(",", $fields) : $fields;
 		$group  = isset($params["group"])  ? "GROUP BY ". $params["group"] : "";
-		$order  = isset($params["order"])  ? "ORDER BY ". $params["order"] : "";
+		$order  = isset($params["order"]) && trim($params["order"])  ? "ORDER BY ". $params["order"] : "";
 		$limit  = isset($params["limit"])  ? "LIMIT ". $params["limit"] : "";
 		$offset = isset($params["offset"])  ? "OFFSET ". $params["offset"] : "";
 		return " SELECT {$fields} FROM " . $this->table . " {$join} {$where} {$group} {$order} {$limit} {$offset}";
