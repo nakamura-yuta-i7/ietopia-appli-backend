@@ -43,6 +43,12 @@ class Favorite extends IetopiaUserDbModel {
 }
 class RoomHistory extends IetopiaUserDbModel {
 	public $table = "room_history";
+	static function findAllByUserId($userId) {
+		$where = " user_id = '{$userId}' ";
+		$order = " created_at DESC ";
+		$self = new static;
+		return $self->findAll(compact("where","order"));
+	}
 	static function insertRoomId($uuid, $roomId) {
 		$userId = User::getMe($uuid)["id"];
 		if ( ! $roomId ) throw new ErrorException("room_id is required.");
@@ -94,9 +100,16 @@ class User extends IetopiaUserDbModel {
 	static function getMe($uuid) {
 		$self = new static;
 		$user = $self->findByUUID($uuid);
+		if ( $uuid && ! $user ) {
+			User::save($uuid);
+			$user = $self->findByUUID($uuid);
+		}
 		if ( ! $user ) {
 			throw new ErrorException("Not found user by uuid.  uuid: {$uuid}");
 		}
+		$user["madori"] = Json::decode($user["madori"]);
+		$user["kibou_renraku_houhou"] = Json::decode($user["kibou_renraku_houhou"]);
+		
 		$result = SearchHistory::getByUserId($user["id"]);
 		$user["search_history"] = $result ? Json::decode($result["params_json"]) : ["word"=>""];
 		
@@ -108,9 +121,14 @@ class User extends IetopiaUserDbModel {
 		if ( ! $uuid ) {
 			throw new ErrorException("uuid is required.");
 		}
-		$params["uuid"] = $uuid;
-		
 		$self = new static;
+		$params["uuid"] = $uuid;
+		$existColumns = $self->getColumns();
+		foreach ($params as $key => $val) {
+			if ( ! in_array($key, $existColumns) ) {
+				unset($params[$key]);
+			}
+		}
 		$self->upsert($params, $pk="uuid");
 	}
 	static function deleteUser($uuid) {

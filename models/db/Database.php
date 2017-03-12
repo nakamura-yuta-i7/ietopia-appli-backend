@@ -59,8 +59,16 @@ class Database {
 		throw new ErrorException("upsert検索で複数件ヒットしました  "
 			 . var_export(compact("count","where"), TRUE));
 	}
+	static function fieldSanitize($fields) {
+		foreach ($fields as $key => $f) {
+			if ( strpos($f, "-") !== false ) {
+				$fields[$key] = "'{$f}'";
+			}
+		}
+		return $fields;
+	}
 	function insert($values) {
-		$fields_string = implode(", ", array_keys($values) );
+		$fields_string = implode(", ", static::fieldSanitize(array_keys($values)) );
 		$values_string = "";
 		$values_strings = [];
 		foreach (array_values($values) as $val) {
@@ -74,13 +82,20 @@ class Database {
 		$values_string = "";
 		$values_strings = [];
 		foreach ( $values as $key => $val ) {
-			$values_strings[] = " {$key} = '{$val}' ";
+			$values_strings[] = " '{$key}' = '{$val}' ";
 		}
 		if ( ! $where ) {
 			$where = " 1 = 1 ";
 		}
 		$values_string = implode(",", $values_strings );
 		$sql = 'UPDATE '. $this->table .' SET '. $values_string .' WHERE ' . $where;
+		Log::info($sql);
 		return $this->query($sql);
+	}
+	function getColumns() {
+		$sql = " PRAGMA table_info('". $this->table ."'); ";
+		return array_map(function($row) {
+			return $row["name"];
+		}, $this->query($sql)->fetchAll(PDO::FETCH_ASSOC) );
 	}
 }

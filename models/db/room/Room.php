@@ -118,6 +118,27 @@ class Room extends IetopiaRoomDbModel {
 		}
 		
 		foreach ( $_REQUEST as $key => $val ) {
+			if ( $key == "new" && $val ) {
+				$conditions[] = " room.new_arrival_flag = 1 ";
+			}
+			if ( $key == "pickup" && $val ) {
+				$conditions[] = " room.pickup_flag = 1 ";
+			}
+			if ( $key == "history" && $val ) {
+				$userId = Application::getInstance()->getUserWithAuthCheck()["id"];
+				$histories = RoomHistory::findAllByUserId($userId);
+				$roomIds = array_map(function($h) {
+					return $h["room_id"];
+				}, $histories);
+				$roomIds = $roomIds ? implode(",", $roomIds) : "0";
+				$conditions[] = " room.id IN ( ". $roomIds ." ) ";
+			}
+			if ( $key == "favorite" && $val ) {
+				$userId = Application::getInstance()->getUserWithAuthCheck()["id"];
+				$roomIds = Favorite::getListByUserId($userId);
+				$roomIds = $roomIds ? implode(",", $roomIds) : "0";
+				$conditions[] = " room.id IN ( ". $roomIds ." ) ";
+			}
 			if ( $key == "word" && $val ) {
 				$fields = createConcatStatement([
 					"name_full", "catchcopy", "shozaiti", "kotu", "comment",

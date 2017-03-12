@@ -1,6 +1,6 @@
 <?php
 $uuid = Application::getInstance()->getUserWithAuthCheck()["uuid"];
-$params = $_GET;
+$params = $_REQUEST;
 
 try {
 	User::save($uuid, $params);
