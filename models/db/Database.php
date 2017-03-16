@@ -89,7 +89,6 @@ class Database {
 		}
 		$values_string = implode(",", $values_strings );
 		$sql = 'UPDATE '. $this->table .' SET '. $values_string .' WHERE ' . $where;
-		Log::info($sql);
 		return $this->query($sql);
 	}
 	function getColumns() {
