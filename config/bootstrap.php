@@ -7,6 +7,9 @@ define("APP_ROOT", realpath(__DIR__."/../") );
 define("IS_PROD", gethostname() == "www1818.sakura.ne.jp" );
 define("IS_DEV", ! IS_PROD );
 
+# 家とぴあ：運営者
+define("IETOPIA_CORP_MAIL", "yuta.nakamura.i7@gmail.com");
+
 # 家とぴあAPI
 define("IETOPIA_API_SERVICE_NAME", "Ietopia API Backend Service");
 define("IETOPIA_API_SERVICE_SMTP", "smtp.mail.yahoo.co.jp");

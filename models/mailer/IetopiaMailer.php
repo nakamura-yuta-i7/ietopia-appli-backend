@@ -1,8 +1,8 @@
 <?php
-class IetopiaMailer {
+class IetopiaMailer extends PHPMailer {
 	static function getInstance() {
-		$mail = new PHPMailer;
-
+		$mail = new static;
+		
 		#$mail->SMTPDebug = 3;
 		$mail->isSMTP();
 		$mail->Host     = IETOPIA_API_SERVICE_SMTP;
@@ -13,7 +13,14 @@ class IetopiaMailer {
 		# $mail->isHTML(true);
 
 		$mail->setFrom(IETOPIA_API_SERVICE_EMAIL, IETOPIA_API_SERVICE_NAME);
-		$mail->Subject = (IS_DEV?"TEST ":"");
+		$mail->Subject = (IS_DEV?"[TEST] ":"");
 		return $mail;
+	}
+	function setSubject($subject) {
+		$this->Subject .= mb_encode_mimeheader($subject,'ISO-2022-JP');
+	}
+	function setHtmlBody($html) {
+		$this->ContentType = "text/html";
+		$this->Body = $html;
 	}
 }
