@@ -32,3 +32,6 @@ class Station extends IetopiaMasterDbModel {
 class Yatin extends IetopiaMasterDbModel {
 	public $table = "yatin";
 }
+class News extends IetopiaMasterDbModel {
+	public $table = "news";
+}
