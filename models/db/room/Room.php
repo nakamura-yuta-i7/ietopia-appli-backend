@@ -36,8 +36,12 @@ class Room extends IetopiaRoomDbModel {
 		return " {$item} {$order} ";
 	}
 	static function createRoomSearchLimit($params) {
-		$limit = 50;
+		$limit = isset($params["limit"]) ? $params["limit"] : "-1";
 		return $limit;
+	}
+	static function createRoomSearchOffset($params) {
+		$offset = isset($params["offset"]) ? $params["offset"] : 0;
+		return $offset;
 	}
 	
 	function raiseNewArrivalFlag($roomId) {
@@ -100,8 +104,11 @@ class Room extends IetopiaRoomDbModel {
 		$conditions = [];
 		$conditions[] = " isinactive = 0 ";
 		
-		function createLikeOrConditions($key, $field) {
+		function createLikeOrConditionsByRequest($key, $field) {
 			$values = $_REQUEST[$key];
+			return createLikeOrConditions($field, $values);
+		}
+		function createLikeOrConditions($field, $values) {
 			$values = is_array($values) ? $values : [$values];
 			$ORs = [];
 			foreach ($values as $value) {
@@ -156,18 +163,26 @@ class Room extends IetopiaRoomDbModel {
 			if ( $key == "yatin-max" && $val ) {
 				$conditions[] = " yatin_int <= " . Sqlite3::escapeString($_REQUEST["yatin-max"]);
 			}
-			if ( $key == "rosen" && $val ) {
-				# 路線名は部屋テーブルに無いかな
-				# $conditions[] = " yatin_int <= " . Sqlite3::escapeString($_REQUEST["rosen"]);
+			if ( ($key == "rosen" && $val) && empty($_REQUEST["station"]) ) {
+				# 駅の指定がされず、路線名だけ指定されていたら
+				$station = new Station();
+				$stationNames = $station->findList([
+					"where" => " rosen_name = '" . Sqlite3::escapeString($val) . "'",
+				], "name");
+				Log::debug($stationNames);
+				
+				$field = "kotu";
+				$orConditions = createLikeOrConditions($field, $stationNames);
+				if ( $orConditions ) $conditions[] = $orConditions;
 			}
 			if ( $key == "station" && $val ) {
 				$field = "kotu";
-				$orConditions = createLikeOrConditions($key, $field);
+				$orConditions = createLikeOrConditionsByRequest($key, $field);
 				if ( $orConditions ) $conditions[] = $orConditions;
 			}
 			if ( $key == "madori" && $val ) {
 				$field = "madori";
-				$orConditions = createLikeOrConditions($key, $field);
+				$orConditions = createLikeOrConditionsByRequest($key, $field);
 				if ( $orConditions ) $conditions[] = $orConditions;
 			}
 			if ( $key == "menseki" && $val ) {
@@ -202,7 +217,7 @@ class Room extends IetopiaRoomDbModel {
 			}
 			if ( $key == "kodawari_joken" && $val ) {
 				$field = "setubi_joken";
-				$orConditions = createLikeOrConditions($key, $field);
+				$orConditions = createLikeOrConditionsByRequest($key, $field);
 				if ( $orConditions ) $conditions[] = $orConditions;
 			}
 		}

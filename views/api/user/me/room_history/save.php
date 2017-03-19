@@ -7,9 +7,9 @@ $roomId = $_GET["room_id"];
 try {
 	RoomHistory::insertRoomId($uuid, $roomId);
 	
-	# 50件を最大保存件数とする
 	$i = 0;
-	$maxSaveCnt = 50;
+	# 最大保存件数
+	$maxSaveCnt = 100;
 	foreach ( RoomHistory::findAllByUserId($userId) as $h ) {
 		$i++;
 		if ($i > $maxSaveCnt) {

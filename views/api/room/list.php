@@ -1,6 +1,5 @@
 <?php
 $model = new Room();
-$where = Room::createSearchCondition();
 
 $fields = [
 	"room.id",
@@ -14,10 +13,12 @@ $fields = [
 	Room::gaikanImagesField() . " AS gaikan_images",
 	Room::detailUrlField() . " AS detail_url",
 ];
+$where = Room::createSearchCondition();
 $limit = Room::createRoomSearchLimit($_REQUEST);
+$offset = Room::createRoomSearchOffset($_REQUEST);
 $order = Room::createOrder($_REQUEST);
 $count = $model->findCount($where);
-$rows = $model->findAll(compact("fields","where","limit","order"));
+$rows = $model->findAll(compact("fields","where","limit","offset","order"));
 
 # 閲覧履歴を返却する場合
 if ( isset($_REQUEST["history"]) && $_REQUEST["history"] ) {

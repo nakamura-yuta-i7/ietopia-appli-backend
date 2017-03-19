@@ -6,6 +6,7 @@ class Database {
 		$this->_conn = $conn;
 	}
 	function __call($name, $arguments) {
+		Log::debug(compact("name","arguments"));
 		return call_user_func_array([$this->_conn, $name], $arguments);
 	}
 	function findList($params=[], $key) {

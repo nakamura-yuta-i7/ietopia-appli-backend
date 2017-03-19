@@ -30,12 +30,12 @@ require_once APP_ROOT . "/models/Application.php";
 require_once APP_ROOT . '/models/logger/Log.php';
 require_once APP_ROOT . '/models/mailer/IetopiaMailer.php';
 
-# ログ: ファイル (INFOレベル)
+# ログ: ファイル
 Log::addLogger(call_user_func(function() {
 	$logger = new FileLogger();
 	$logger->destination = APP_ROOT . "/log/info.log"; # デフォルト保存ファイル
 	return $logger;
-}), LogLevel::INFO );
+}), ( IS_PROD ? LogLevel::INFO : LogLevel::DEBUG ) );
 
 # ログ: メール (FATALレベル)
 $mailer = IetopiaMailer::getInstance();
