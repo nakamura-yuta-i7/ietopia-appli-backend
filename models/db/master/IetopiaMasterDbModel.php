@@ -35,3 +35,6 @@ class Yatin extends IetopiaMasterDbModel {
 class News extends IetopiaMasterDbModel {
 	public $table = "news";
 }
+class RecommendArea extends IetopiaMasterDbModel {
+	public $table = "recommend_area";
+}

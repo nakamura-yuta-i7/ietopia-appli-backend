@@ -195,6 +195,14 @@ class Room extends IetopiaRoomDbModel {
 				}
 				if ( $orConditions ) $conditions[] = " ( ". implode($orConditions, " OR ") ." ) ";
 			}
+			if ( $key == "recommend_area" && $val ) {
+				$vals = is_array($val) ? $val : [$val];
+				$orConditions = [];
+				foreach ($vals as $value) {
+					$orConditions[] = " ( shozaiti LIKE '%{$value}%' ) ";
+				}
+				if ( $orConditions ) $conditions[] = " ( ". implode($orConditions, " OR ") ." ) ";
+			}
 			if ( $key == "ekitoho" && $val ) {
 				$ORs = [];
 				foreach (range(0, $val) as $int) {

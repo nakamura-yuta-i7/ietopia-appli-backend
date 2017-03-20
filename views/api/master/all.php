@@ -8,4 +8,5 @@ echo Json::encode([
 	"station"        => (new Station())->findAll(),
 	"tikunensu"      => (new Tikunensu())->findAll(),
 	"yatin"          => (new Yatin())->findAll(),
+	"recommend_area" => (new RecommendArea())->findAll(),
 ]);
