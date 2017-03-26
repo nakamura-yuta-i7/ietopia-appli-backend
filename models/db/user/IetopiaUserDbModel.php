@@ -6,12 +6,23 @@ class IetopiaUserDbModel extends IetopiaDbModel {
 		$this->setConnection($conn);
 	}
 }
+class Inquiry extends IetopiaUserDbModel {
+	public $table = "inquiry";
+}
 class Favorite extends IetopiaUserDbModel {
 	public $table = "favorite";
 	static function getListByUserId($userId) {
 		$where = " user_id = '{$userId}' ";
 		$self = new static;
 		return $self->findList(compact("where"), $key="room_id");
+	}
+	static function getAllGroupByRoomId() {
+		$self = new static;
+		$favorites = [];
+		foreach ( $self->query("SELECT room_id, count(*) AS count FROM favorite GROUP BY room_id") as $row ) {
+			$favorites[$row["room_id"]] = $row["count"];
+		}
+		return $favorites;
 	}
 	static function saveRoomId($uuid, $roomId) {
 		$userId = User::getMe($uuid)["id"];
@@ -93,6 +104,23 @@ class User extends IetopiaUserDbModel {
 		$self = new static;
 		$one = $self->findOne(["where"=>" uuid = '{$uuid}' "]);
 		return $one;
+	}
+	static function createInfoForHtml($row, $keys=[]) {
+		$lines = [];
+		foreach ($keys as $key) {
+			if (!array_key_exists($key, $row)) continue;
+			$lines[] = $key . ": " . $row[$key];
+		}
+		return implode("<br>", $lines);
+	}
+	static function createBasicInfoForHtml($row) {
+		return static::createInfoForHtml($row, [
+			"furigana","jusho","tel","mail",
+			"kibou_renraku_houhou","kibou_renraku_jikan_start","kibou_renraku_jikan_end", "note"]);
+	}
+	static function createKibouInfoForHtml($row) {
+		return static::createInfoForHtml($row, [
+		"age", "sex", "yatin-min", "yatin-max", "madori", "tikunensu", "other-kibou", "installation_id"]);
 	}
 	static function getIdByUUID($uuid) {
 		return static::getMe($uuid)["id"];

@@ -11,6 +11,14 @@ try {
 	$mailer->setHtmlBody(createHtmlBody($uuid, $params));
 	$mailer->send();
 	
+	$inquiry = new Inquiry();
+	$inquiry->insert([
+		"user_id"     => $user["id"],
+		"room_id"     => isset($params["room_id"]) ? $params["room_id"] : NULL,
+		"params_json" => Json::encode($params),
+		"type"        => "mail",
+	]);
+	
 	http_response_code(200);
 	$body = "ok";
 	
@@ -32,9 +40,24 @@ function createHtmlBody($uuid, $params) {
 	$kibou_renraku_houhou = implode(",", $kibou_renraku_houhou);
 	$note = nl2br($note);
 	
+	$roomUrl = NULL;
+	if (isset($room_id)) {
+		$room = new Room();
+		$res = $room->findOne([
+			"fields" => [ Room::detailUrlField() . " AS url" ],
+			"where"=> "id = ". SQLite3::escapeString($room_id) ]);
+		$roomUrl = $res["url"];
+	}
+	
+	$roomIdString = isset($room_id) ? "
+		<b>物件ID:</b><br>
+		　{$room_id} ($roomUrl)<br>
+	" : "";
+	
 	return "
 	<b><u>お問い合わせ内容</u></b><br>
 	<br>
+	{$roomIdString}
 	<b>UUID:</b><br>
 	　{$uuid}<br>
 	<b>お名前:</b><br>

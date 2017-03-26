@@ -16,12 +16,16 @@ define("IETOPIA_API_SERVICE_SMTP", "smtp.mail.yahoo.co.jp");
 define("IETOPIA_API_SERVICE_EMAIL", "yuta_nakamura_i7@yahoo.co.jp");
 define("IETOPIA_API_ADMIN_EMAIL", "yuta.nakamura.i7@gmail.com");
 
+# 家とぴあアプリ：管理者画面：PATH
+define("ADMIN_ROOT_PATH", "/admin/");
+
 # パスワード
 require_once __DIR__ . "/passwords.php";
 
 # ライブラリ
 require_once APP_ROOT . "/libs/Json.php";
 require_once APP_ROOT . "/libs/Ltsv.php";
+require_once APP_ROOT . "/libs/HtmlTable.php";
 
 # アプリケーションクラス
 require_once APP_ROOT . "/models/Application.php";

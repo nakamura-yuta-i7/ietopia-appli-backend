@@ -8,9 +8,9 @@ class IetopiaDbModel extends Database {
 	const ISINACTIVE_ON  = 1;
 	const ISINACTIVE_OFF = 0;
 	
-	public $defaultWhere = " isinactive = 0 ";
+	public $defaultWhere = "isinactive = 0 ";
 	function createSelectSql($params=[]) {
-		$defaultWhere = $this->defaultWhere;
+		$defaultWhere = $this->table . "." . $this->defaultWhere;
 		$params["where"] = call_user_func(
 			function() use($params, $defaultWhere) {
 				if (

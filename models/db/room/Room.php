@@ -74,6 +74,7 @@ class Room extends IetopiaRoomDbModel {
 		if ( !isset($params["fields"]) ) {
 			$params["fields"] = [
 				"room.*",
+				static::detailUrlField() . " AS detail_url",
 				static::gaikanImagesField() . " AS gaikan_images",
 			];
 		}
@@ -92,7 +93,7 @@ class Room extends IetopiaRoomDbModel {
 		}, parent::findAll($params));
 	}
 	static function detailUrlField() {
-		return "'". IETOPIA_DETAIL_BASE_URL . "/" ."' || gaikan_images.id || '/' || room.id";
+		return "'". IETOPIA_DETAIL_BASE_URL . "/" ."' || gaikan_images_id || '/' || room.id";
 	}
 	static function gaikanImageMainField() {
 		return "gaikan_images.image_main";
