@@ -8,13 +8,14 @@ define("IS_PROD", gethostname() == "www1818.sakura.ne.jp" );
 define("IS_DEV", ! IS_PROD );
 
 # 家とぴあ：運営者
-define("IETOPIA_CORP_MAIL", "yuta.nakamura.i7@gmail.com");
+define("IETOPIA_CORP_MAIL", IS_DEV ? 
+	"admin@appli.ietopia-services.com" : "admin@appli.ietopia-services.com");
 
 # 家とぴあAPI
-define("IETOPIA_API_SERVICE_NAME", "Ietopia API Backend Service");
-define("IETOPIA_API_SERVICE_SMTP", "smtp.mail.yahoo.co.jp");
-define("IETOPIA_API_SERVICE_EMAIL", "yuta_nakamura_i7@yahoo.co.jp");
-define("IETOPIA_API_ADMIN_EMAIL", "yuta.nakamura.i7@gmail.com");
+define("IETOPIA_API_SERVICE_NAME",  "Ietopia API Backend Service");
+define("IETOPIA_API_SERVICE_SMTP",  "sakuras.sakura.ne.jp");
+define("IETOPIA_API_SERVICE_EMAIL", "admin@appli.ietopia-services.com");
+define("IETOPIA_API_ADMIN_EMAIL",   "admin@appli.ietopia-services.com");
 
 # 家とぴあアプリ：管理者画面：PATH
 define("ADMIN_ROOT_PATH", "/admin/");

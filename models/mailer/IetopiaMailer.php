@@ -9,6 +9,7 @@ class IetopiaMailer extends PHPMailer {
 		$mail->SMTPAuth = true;
 		$mail->Username = IETOPIA_API_SERVICE_EMAIL;
 		$mail->Password = IETOPIA_MAILER_SMTP_PASSWORD;
+		$mail->Port     = 587;
 		
 		# $mail->isHTML(true);
 
