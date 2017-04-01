@@ -4,8 +4,12 @@ class HtmlTable {
 	protected $_rows;
 	protected $_tableHtml;
 	protected $_attrs = [];
+	protected $_isSingleRow = FALSE;
 	function __construct($rows=[]) {
 		$this->_rows = $rows;
+	}
+	function onSingleRowMode() {
+		$this->_isSingleRow = TRUE;
 	}
 	function setAttrs($attrs=[]) {
 		$this->_attrs = $attrs;
@@ -23,11 +27,30 @@ class HtmlTable {
 			$attrs .= " {$attrName}='{$val}'";
 		}
 		$table = "<table{$attrs}>";
-		$table .= $this->_createThead();
-		$table .= $this->_createTFoot();
-		$table .= $this->_createTbody();
+		if ( $this->_isSingleRow ) {
+			$table .= $this->_createSingleRowContent();
+		} else {
+			$table .= $this->_createThead();
+			$table .= $this->_createTFoot();
+			$table .= $this->_createTbody();
+		}
 		$table .= '</table>';
 		$this->_tableHtml = $table;
+	}
+	function _createSingleRowContent() {
+		$row = $this->_rows;
+		$content = "<tbody>";
+		foreach ( $row as $key => $val ) {
+			
+			$content .= "<tr>".
+				"<th>{$key}".
+				"</th>".
+				"<td>{$val}".
+				"</td>".
+			"</tr>";
+		}
+		$content .= "</tbody>";
+		return $content;
 	}
 	function _createThead() {
 		$thead = '<thead>';

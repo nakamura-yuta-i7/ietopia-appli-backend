@@ -3,6 +3,8 @@
 <?php include __DIR__ . "/_head.php"; ?>
 <body>
 
+<div id="modal"></div>
+
 <header>
 	<div class="ui small menu">
 		<a class="item" <?php echo adminHref(); ?>>

@@ -5,6 +5,10 @@ header h1 { font-size: 16px;  display: table-cell; vertical-align: middle; }
 header > .menu > .item { text-align: center; }
 header .right.menu .item::before { background: transparent; }
 
+.ui.dimmer {
+	background-color: rgba(0,0,0,.1);
+}
+
 main {
 	background: #fff;
 	box-sizing: border-box;

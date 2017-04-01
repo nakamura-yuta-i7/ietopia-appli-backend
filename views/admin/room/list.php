@@ -46,6 +46,9 @@ $(document).ready(function() {
 	$('#html-table').DataTable();
 } );
 function inactivate(room_id, event) {
+	if (!confirm("無効化しますか？")) {
+		return false;
+	}
 	var $selfBtn = $(event.target);
 	$.get("<?php echo adminUrl("room/inactivate")?>", {room_id: room_id}, function(result) {
 		if ( result != "ok" ) return false;
