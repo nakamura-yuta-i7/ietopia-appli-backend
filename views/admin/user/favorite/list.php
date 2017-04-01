@@ -49,7 +49,7 @@ echo (new HtmlTable($tableData))->getHtml();
 
 <script>
 $(document).ready(function() {
-	$('#html-table').DataTable();
+	$('#html-table').DataTable({stateSave: true,});
 } );
 </script>
 <?php includeFooter(); ?>

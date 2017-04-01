@@ -43,7 +43,7 @@ echo (new HtmlTable($tableData))->getHtml();
 
 <script>
 $(document).ready(function() {
-	$('#html-table').DataTable();
+	$('#html-table').DataTable({stateSave: true,});
 } );
 function inactivate(room_id, event) {
 	if (!confirm("無効化しますか？")) {

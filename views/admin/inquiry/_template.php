@@ -57,9 +57,7 @@ echo (new HtmlTable($tableData))->getHtml();
 
 <script>
 $(document).ready(function() {
-	$('#html-table').DataTable({
-		stateSave: true,
-	});
+	$('#html-table').DataTable({stateSave: true,});
 } );
 
 $(function() {
