@@ -36,9 +36,10 @@ $tableData = array_map(function($row) use($rooms) {
 	$room = $rooms[$row["room_id"]];
 	$roomUrl = $room["detail_url"];
 	$roomLink = '<a href="'.$roomUrl.'" target="_blank">'.$room["id"].'</a>';
+	$userLink = User::createUserModalLink($row["uuid"]);
 	return [
 		"登録日時" =>  $row["created_at"],
-		"端末UUID" => $row["uuid"],
+		"端末UUID" => $userLink,
 		"氏名"     => $row["name"],
 		"物件ID"   => $roomLink,
 		"物件名"   => $room["name"],
@@ -51,5 +52,14 @@ echo (new HtmlTable($tableData))->getHtml();
 $(document).ready(function() {
 	$('#html-table').DataTable({stateSave: true,});
 } );
+$(function() {
+	$("a.user-modal").on("click", function() {
+		var url = $(this).attr("href");
+		$("#modal").load(url, function() {
+			$("#modal .ui.modal").modal("show");
+		});
+		return false;
+	});
+});
 </script>
 <?php includeFooter(); ?>

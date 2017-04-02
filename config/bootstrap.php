@@ -27,6 +27,7 @@ require_once __DIR__ . "/passwords.php";
 require_once APP_ROOT . "/libs/Json.php";
 require_once APP_ROOT . "/libs/Ltsv.php";
 require_once APP_ROOT . "/libs/HtmlTable.php";
+require_once APP_ROOT . "/libs/functions.php";
 
 # アプリケーションクラス
 require_once APP_ROOT . "/models/Application.php";

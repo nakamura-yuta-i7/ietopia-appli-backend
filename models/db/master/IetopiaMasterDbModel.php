@@ -34,6 +34,10 @@ class Yatin extends IetopiaMasterDbModel {
 }
 class News extends IetopiaMasterDbModel {
 	public $table = "news";
+	static function convertBody($body) {
+		$body = nl2br($body);
+		return $body = url2link($body);
+	}
 }
 class RecommendArea extends IetopiaMasterDbModel {
 	public $table = "recommend_area";

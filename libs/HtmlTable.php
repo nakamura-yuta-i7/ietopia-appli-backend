@@ -43,9 +43,9 @@ class HtmlTable {
 		foreach ( $row as $key => $val ) {
 			
 			$content .= "<tr>".
-				"<th>{$key}".
-				"</th>".
-				"<td>{$val}".
+				"<td class='name'>{$key}".
+				"</td>".
+				"<td class=''>{$val}".
 				"</td>".
 			"</tr>";
 		}

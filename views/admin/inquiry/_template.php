@@ -27,7 +27,7 @@ $tableData = array_map(function($row) use($users, $inquiryType) {
 
 	$memoTextarea = "<textarea inquiry-id='{$id}'>".$row["memo"]."</textarea>";
 	
-	$userLink = "<a href='/admin/user/modal?uuid=".$user["uuid"]."'>".$user["uuid"]."</a>";
+	$userLink = User::createUserModalLink($user["uuid"]);
 	
 	if ( $inquiryType == "mail" ) {
 		return [
@@ -61,12 +61,11 @@ $(document).ready(function() {
 } );
 
 $(function() {
-	$("table a").on("click", function() {
+	$("a.user-modal").on("click", function() {
 		var url = $(this).attr("href");
 		$("#modal").load(url, function() {
 			$("#modal .ui.modal").modal("show");
 		});
-		
 		return false;
 	});
 	$("textarea").on("change", function() {

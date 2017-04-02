@@ -122,6 +122,9 @@ class User extends IetopiaUserDbModel {
 		return static::createInfoForHtml($row, [
 		"age", "sex", "yatin-min", "yatin-max", "madori", "tikunensu", "other-kibou", "installation_id"]);
 	}
+	static function createUserModalLink($uuid) {
+		return "<a class='user-modal' href='/admin/user/modal?uuid=".$uuid."'>".$uuid."</a>";
+	}
 	static function getIdByUUID($uuid) {
 		return static::getMe($uuid)["id"];
 	}
