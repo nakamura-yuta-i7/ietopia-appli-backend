@@ -8,6 +8,10 @@ class HtmlTable {
 	function __construct($rows=[]) {
 		$this->_rows = $rows;
 	}
+	protected $_requireTFoot = TRUE;
+	function requireTFoot($bool) {
+		$this->_requireTFoot = $bool;
+	}
 	function onSingleRowMode() {
 		$this->_isSingleRow = TRUE;
 	}
@@ -31,8 +35,10 @@ class HtmlTable {
 			$table .= $this->_createSingleRowContent();
 		} else {
 			$table .= $this->_createThead();
-			$table .= $this->_createTFoot();
 			$table .= $this->_createTbody();
+			if ( $this->_requireTFoot ) {
+				$table .= $this->_createTFoot();
+			}
 		}
 		$table .= '</table>';
 		$this->_tableHtml = $table;

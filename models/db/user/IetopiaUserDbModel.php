@@ -8,6 +8,22 @@ class IetopiaUserDbModel extends IetopiaDbModel {
 }
 class Inquiry extends IetopiaUserDbModel {
 	public $table = "inquiry";
+	static function getDashboardRows() {
+		$inquiry = new Inquiry();
+		$inquiries = $inquiry->findAll([
+			"order" => " created_at DESC ",
+			"limit" => 10,
+		]);
+		return array_map(function($row) {
+			$user = User::findById($row["user_id"]);
+			$userLink = User::createUserModalLink($user["uuid"]);
+			return [
+				"日時"    => $row["created_at"],
+				"タイプ"   => $row["type"],
+				"ユーザー" => $userLink,
+			];
+		}, $inquiries);
+	}
 }
 class Favorite extends IetopiaUserDbModel {
 	public $table = "favorite";
@@ -99,11 +115,33 @@ class SearchHistory extends IetopiaUserDbModel {
 }
 class User extends IetopiaUserDbModel {
 	public $table = "user";
+	static function findById($id) {
+		$id = SQLite3::escapeString($id);
+		$self = new static;
+		$one = $self->findOne(["where"=>" id = '{$id}' "]);
+		return $one;
+	}
 	static function findByUUID($uuid) {
 		$uuid = SQLite3::escapeString($uuid);
 		$self = new static;
 		$one = $self->findOne(["where"=>" uuid = '{$uuid}' "]);
 		return $one;
+	}
+	static function getDashboardRows() {
+		$user = new User();
+		$users = $user->findAll([
+			"order" => " created_at DESC ",
+			"limit" => 10,
+		]);
+		return array_map(function($user) {
+			$link = User::createUserModalLink($user["uuid"]);
+			return [
+				"登録日時" => $user["created_at"],
+				"uuid"   => $link,
+				"instlation_id" => $user["instlation_id"],
+				
+			];
+		}, $users);
 	}
 	static function createInfoForHtml($row, $keys=[]) {
 		$lines = [];
