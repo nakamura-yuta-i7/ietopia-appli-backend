@@ -6,7 +6,10 @@ header > .menu > .item { text-align: center; }
 header .right.menu .item::before { background: transparent; }
 
 .ui.dimmer {
-	background-color: rgba(0,0,0,.1);
+	background-color: rgba(0,0,0, 0.4);
+}
+.ui.modal>.header {
+	border-bottom: none;
 }
 
 main {
@@ -49,3 +52,4 @@ table.ui.table.small td { padding: 3px 8px;  }
 .dataTables_wrapper input[type=search] {
 	width: 80%; box-sizing: border-box;
 }
+

@@ -5,6 +5,8 @@
 
 <div id="modal"></div>
 
+<?php include __DIR__ . "/_tel-modal.php"; ?>
+
 <header>
 	<div class="ui small menu">
 		<a class="item" <?php echo adminHref(); ?>>

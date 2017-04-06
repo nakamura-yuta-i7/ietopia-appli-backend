@@ -29,23 +29,28 @@
 </div>
 
 <div class="ui grid">
-	<div class="column row">
+	<div class="two column row">
 		<div class="column">
-			<h3>アプリケーション仕様</h3>
+			<h3>アプリケーション構成図</h3>
 			<p class="description">システム全体のアーキテクチャについて</p>
-			<img src="/imgs/admin/application-diagram.png" width="">
+			<a class="application-diagram" href="/imgs/admin/application-diagram.png" target="_blank">
+				<img src="/imgs/admin/application-diagram.png" width="100%">
+			</a>
 		</div>
-	</div>
-</div>
-
-<div class="ui grid">
-	<div class="column row">
 		<div class="column">
 			<h3>関連情報</h3>
 			<p class="description">アプリ運用に関わる各種情報について</p>
 		</div>
 	</div>
 </div>
+<style>
+.application-diagram {
+	display: block;
+	background: #efefef;
+	padding: 5px;
+}
+.application-diagram img { display: block; }
+</style>
 
 <script>
 $(function() {

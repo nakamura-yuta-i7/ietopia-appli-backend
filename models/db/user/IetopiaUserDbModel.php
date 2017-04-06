@@ -138,7 +138,7 @@ class User extends IetopiaUserDbModel {
 			return [
 				"登録日時" => $user["created_at"],
 				"uuid"   => $link,
-				"instlation_id" => $user["instlation_id"],
+				"installation_id" => $user["installation_id"],
 				
 			];
 		}, $users);
