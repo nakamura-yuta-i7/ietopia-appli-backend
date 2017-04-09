@@ -40,6 +40,43 @@
 		<div class="column">
 			<h3>関連情報</h3>
 			<p class="description">アプリ運用に関わる各種情報について</p>
+			
+			<h5>App Store
+				<a href="https://itunes.apple.com/jp/app/池袋中心の賃貸-お部屋探しのことなら-家とぴあ/id1222305976?mt=8" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+			
+			<h5>Apple Developer Program
+				<a href="https://developer.apple.com/programs/jp/" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+
+			<h5>Google Play
+				<a href="https://play.google.com/store/apps/details?id=jp.ietopia.appli&hl=ja" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+
+			<h5>Google Play Developer Console
+				<a href="https://play.google.com/apps/publish/" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+			
+
+			<h5>Nifty Mobile Backend
+				<a href="http://mb.cloud.nifty.com/" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+
+			<h5>Monaca
+				<a href="https://ja.monaca.io/" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+
+			<h5>Github
+				<a href="https://github.com/nakamura-yuta-i7/ietopia-appli" target="_blank">
+					<i class="linkify icon"></i></a>
+			</h5>
+			
 		</div>
 	</div>
 </div>
