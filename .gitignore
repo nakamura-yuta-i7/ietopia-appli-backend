@@ -2,7 +2,7 @@
 .project
 .settings/
 /vendor/
-
+db/*.sqlite
 test_*
 /config/passwords.php
 phpliteadmin.config.php
