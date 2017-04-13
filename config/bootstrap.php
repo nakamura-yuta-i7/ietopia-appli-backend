@@ -9,7 +9,7 @@ define("IS_DEV", ! IS_PROD );
 
 # 家とぴあ：運営者
 define("IETOPIA_CORP_MAIL", IS_DEV ? 
-	"admin@appli.ietopia-services.com" : "admin@appli.ietopia-services.com");
+	"admin@appli.ietopia-services.com" : "info@ietopia.jp");
 
 # 家とぴあAPI
 define("IETOPIA_API_SERVICE_NAME",  "Ietopia API Backend Service");
