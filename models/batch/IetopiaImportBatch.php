@@ -82,7 +82,7 @@ class IetopiaImportBatch extends BatchAbstract {
 		}
 		
 		# エラー件数が多すぎたら取込処理を中止
-		if ( $errorCount > 20 ) {
+		if ( $errorCount > 200 ) {
 			throw new ErrorException("物件取込エラーが多すぎる為処理を中止しました。");
 		}
 		
