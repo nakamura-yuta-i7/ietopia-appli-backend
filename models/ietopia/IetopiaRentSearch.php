@@ -72,6 +72,10 @@ class IetopiaSearchResultBuilding {
 	function __construct($pqObj) {
 		$this->pqObj = $pqObj;
 	}
+	# 非公開物件かどうか
+	function isSecret() {
+		return !! pq($this->pqObj)->find(".secret")->html();
+	}
 	# 建物名を返す
 	function getName() {
 		$name = pq($this->pqObj)->find("h2")->text();

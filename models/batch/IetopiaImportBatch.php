@@ -44,6 +44,11 @@ class IetopiaImportBatch extends BatchAbstract {
 			$importedBuildingIds[] = $buildingId;
 
 			Log::info(Ltsv::encode(compact("count", "name", "detailUrl")));
+
+			if ( $building->isSecret() ) {
+				Log::info("非公開物件の為、取込をスキップしました。");
+				continue;
+			}
 			
 			try {
 				# 外観写真
