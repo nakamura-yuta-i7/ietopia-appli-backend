@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<script>
+ function DisableButton(b){
+  b.disabled = true;
+  b.value = '送信中';
+  b.form.submit();
+ }
+</script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理画面ログイン【株式会社サクラス（家とぴあ）】</title>
+<meta http-equiv="imagetoolbar" content="no" />
+<meta http-equiv="content-language" content="ja" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="content-script-type" content="text/javascript" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link rel="shortcut icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
+
+	<link rel="stylesheet" type="text/css" href="/css/import.css" />
+	<link rel="stylesheet" type="text/css" href="/css/admin.css" />
+	<link rel="stylesheet" type="text/css" href="/css/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="/css/smoothness/jquery-ui-1.8.8.custom.css" />
+
+	<link rel="stylesheet" type="text/css" href="/css/admin/admins.css" />
+
+	<script type="text/javascript" src="/js/lib/jquery.js"></script>
+	<script type="text/javascript" src="/js/lib/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/lib/jquery.bt.js"></script>
+	<script type="text/javascript" src="/js/lib/jquery.lazyload.js"></script>
+	<script type="text/javascript" src="/js/lib/thickbox.js"></script>
+	<script type="text/javascript" src="/js/bgiframe.min.js"></script>
+	<script type="text/javascript" src="/js/common.js"></script>
+	<script type="text/javascript" src="/js/ifAdminHelper.js"></script>
+	<script type="text/javascript" src="/js/admin.js"></script>
+	<script type="text/javascript" src="/js/checkbox_group.js"></script>
+	<script type="text/javascript" src="/js/room_table.js"></script>
+<!--[if lte IE 8]><script src="/js/excanvas.js"></script><![endif]-->
+<link rel="index" href="/admins/" />
+</head>
+<body id="diamondtail" class="admins_login">
+<div id="wrap">
+<div id="header">
+	<div id="header_inner">
+	<p id="tag_line">ロングテールSEO対策の不動産集客ウェブシステム-Ver.3.1.10</p>
+	<div id="logo"><a href="/admins/"><img src="/img/admin/dt_logo.gif" width="286" height="38" alt="ダイアモンドテール[管理画面]" /></a></div>
+	<div id="guide_navi">
+		<div id="support_bnr">
+			<iframe src="http://www.diamondtail.jp/support/admin_header" name="admin_header" width="215" height="65" scrolling="no" frameborder="0">
+				この部分はインラインフレームを使用しています。
+			</iframe>
+		</div>
+	</div>
+	</div>
+	<!-- /#guide_navi -->
+	</div>	<!-- /#header -->
+	<div id="contents">
+		<div id="article">
+
+
+<div id="login_form">
+	<h1>管理者ログイン</h1>
+	<p>メールアドレスとパスワードを入力してください</p>
+	<form action="/admins/login" id="AdminLoginForm" method="post" accept-charset="utf-8"><div style="display:none;"><input type="hidden" name="_method" value="POST" /><input type="hidden" name="data[_Token][key]" value="d567afc3914c2432861816f9ef8b0f0ff4a34cf9" id="Token325709378" /></div>	<table>
+		<col width="100" />
+		<col />
+		<tr>
+			<th width="15">メールアドレス</th>
+			<td>
+				<input name="data[Admin][mail]" type="text" class="text_input elem_w250" maxlength="255" id="AdminMail" />							</td>
+		</tr>
+		<tr>
+			<th width="85">パスワード</th>
+			<td>
+				<input type="password" name="data[Admin][password]" class="text_input elem_w250" maxlength="255" id="AdminPassword" />							</td>
+		</tr>
+		<tr>
+			<th>&nbsp;</th>
+			<td>
+				<input type="hidden" name="data[Admin][remember_me]" id="AdminRememberMe_" value="0" /><input type="checkbox" name="data[Admin][remember_me]" class="mp va" value="1" id="AdminRememberMe" />				<label for="AdminRememberMe" class="mp">次回からログイン情報の入力を省略</label>
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" value="POST" name="_method" />
+	<p class="tac">
+		<input type="submit" value="ログイン" class="btn mp" />
+	</p>
+	<div style="display:none;"><input type="hidden" name="data[_Token][fields]" value="c98280d81316373243d6ca09a1ba64dd5c11040e%3A" id="TokenFields263460849" /></div></form></div>
+		</div>
+		<!-- /#article -->
+</div>
+<!-- /#contents -->
+</div>
+<!-- /#wrap -->
+<div id="footer">
+		<!-- #topic_path -->
+	<p id="copyright"><a href="http://www.diamondmedia.co.jp/" target="_blank"><img src="/img/admin/diamondmedia.gif" width="117" height="26" alt="DiamondmMdia" /></a></p>
+</div>
+<!-- /footer -->
+</body>
+</html>

@@ -11,3 +11,4 @@ class IetopiaRoomDbModel extends IetopiaDbModel {
 
 require_once __DIR__ . "/Room.php";
 require_once __DIR__ . "/GaikanImages.php";
+require_once __DIR__ . "/Building.php";

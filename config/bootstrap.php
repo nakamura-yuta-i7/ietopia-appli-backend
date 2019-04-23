@@ -11,6 +11,9 @@ define("IS_DEV", ! IS_PROD );
 define("IETOPIA_CORP_MAIL", IS_DEV ? 
 	"admin@appli.ietopia-services.com" : "info@ietopia.jp");
 
+# 家とぴあウェブサイト：管理者画面
+define("IETOPIA_ADMIN_CONSOLE_LOGIN_EMAIL", "sakurasdev@gmail.com");
+
 # 家とぴあAPI
 define("IETOPIA_API_SERVICE_NAME",  "Ietopia API Backend Service");
 define("IETOPIA_API_SERVICE_SMTP",  "sakuras.sakura.ne.jp");
